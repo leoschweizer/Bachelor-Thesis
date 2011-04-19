@@ -2,7 +2,7 @@
 \lyxformat 345
 \begin_document
 \begin_header
-\textclass article
+\textclass llncs
 \use_default_options true
 \language english
 \inputencoding auto
@@ -17,8 +17,9 @@
 
 \graphics default
 \paperfontsize default
+\spacing single
 \use_hyperref false
-\papersize default
+\papersize a4paper
 \use_geometry false
 \use_amsmath 1
 \use_esint 1
@@ -36,12 +37,21 @@
 \tracking_changes false
 \output_changes false
 \author "" 
+\author "" 
 \end_header
 
 \begin_body
 
 \begin_layout Title
 Optimizing Storage of Energy Event Data in In-Memory Databases
+\end_layout
+
+\begin_layout Author
+Leonhard Schweizer
+\end_layout
+
+\begin_layout Institute
+Hasso Plattner Institute
 \end_layout
 
 \begin_layout Abstract
@@ -63,7 +73,6 @@ sed tables.
  As a result, new opportunities arise, like offering electricity rates with
  real-time pricing or managing supply and demand based on up-to-the-minute
  analytics.
- 
 \end_layout
 
 \end_body
