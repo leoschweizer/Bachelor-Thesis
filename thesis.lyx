@@ -165,7 +165,44 @@ Lightweight Compression Algorithms
 \end_layout
 
 \begin_layout Subsubsection
-Domain Coding (Dictionary)
+Domain Coding
+\end_layout
+
+\begin_layout Standard
+Domain coding or dictionary compression is the fundamental compression algorithm
+ which is utilized in all situations and independently from other compression
+ algorithms.
+ All original values of a column are stored in a sorted dictionary and the
+ column itself is represented as index vector consisting of ordinal references
+ to this dictionary.
+ Thus, a column containing 
+\begin_inset Formula $n$
+\end_inset
+
+ distinct values of an arbitrary type and a total of 
+\begin_inset Formula $t$
+\end_inset
+
+ values can optimally be represented with 
+\begin_inset Formula 
+\[
+t\cdot\lceil\log_{2}(d)\rceil
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+bits.
+ The size of the dictionary itself has to be added to the total amount of
+ required main memory, which especially carries weight when the record set
+ contains a high percentage of distinct values.
+ Aside from the reduction of memory consumption, this method also entails
+ an acceleration of processing speed due to the handling of smaller data
+ volumes on a per request basis and the optimization of processing units
+ for ordinal types on the hardware layer.
 \end_layout
 
 \begin_layout Subsubsection
@@ -190,6 +227,10 @@ Run Length Coding
 
 \begin_layout Subsection
 ..
+\end_layout
+
+\begin_layout Subsection
+Estimation of Main Memory Consumption
 \end_layout
 
 \begin_layout Section
