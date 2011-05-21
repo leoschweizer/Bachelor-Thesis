@@ -219,11 +219,77 @@ Prefix coding is powerful in such cases where a column contains one specific
  the NULL-value) and the table can be sorted by this column such that this
  value occurs at the beginning of this column.
  The prefix of equal values is then removed from the index vector completely.
- The prefix value and the number of occurrences are saved separately.
+ The prefix value and the number of occurrences are saved separately, each
+ with a consumption of 32 bits.
+ A column with a total of 
+\begin_inset Formula $t$
+\end_inset
+
+ elements, 
+\begin_inset Formula $d$
+\end_inset
+
+ distinct values and a prefix of 
+\begin_inset Formula $p$
+\end_inset
+
+ elements thus can be compressed to 
+\begin_inset Formula 
+\[
+(t-p)\cdot\lceil log_{2}(d)\rceil+64
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+bits.
 \end_layout
 
 \begin_layout Subsubsection
 Sparse Coding
+\end_layout
+
+\begin_layout Standard
+If the occurences of the most frequent value are spread throughout a column,
+ sparse coding can be used to reduce the size of this column.
+ In doing so, all occurences of the value are removed from the index vector
+ and this socalled sparse value is saved once as reference into the dictionary,
+ consuming 32 bits.
+ A bit vector is generated for the column, indicating whether the value
+ corresponding to the element at the given index equals the sparse value
+ or not.
+ Thus, sparse compression reduces the size of a column with 
+\begin_inset Formula $s$
+\end_inset
+
+ occurences of the sparse value to
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(t-s)\cdot\lceil log_{2}(d)\rceil+t+32
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+bits.
+ In addition, a prefix coding could be applied to the bit vector.
+\end_layout
+
+\begin_layout Standard
+To retrieve a value from a sparse encoded column, the bit vector has to
+ be checked at the given index.
+ If it indicates that the value differs from the sparse value, the index
+ of the actual value within the index vector can be retrieved through the
+ number of set bits up to the given index.
 \end_layout
 
 \begin_layout Subsubsection
