@@ -258,5 +258,17 @@ Impact on SELECT Performance
 Conclusion
 \end_layout
 
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintAll"
+bibfiles "thesis"
+options "C:/Users/Leo/AppData/Roaming/MiKTeX/2.9/tex/latex/lncs/splncs03"
+
+\end_inset
+
+
+\end_layout
+
 \end_body
 \end_document
