@@ -161,7 +161,7 @@ Compression
 \end_layout
 
 \begin_layout Subsection
-Lightweight Compression Algorithms
+Lightweight Column Compression Techniques
 \end_layout
 
 \begin_layout Subsubsection
@@ -236,7 +236,7 @@ Prefix coding is powerful in such cases where a column contains one specific
  elements thus can be compressed to 
 \begin_inset Formula 
 \[
-(t-p)\cdot\lceil log_{2}(d)\rceil+64
+(t-p)\cdot\lceil\log_{2}(d)\rceil+64
 \]
 
 \end_inset
@@ -271,7 +271,7 @@ If the occurences of the most frequent value are spread throughout a column,
 \begin_layout Standard
 \begin_inset Formula 
 \[
-(t-s)\cdot\lceil log_{2}(d)\rceil+t+32
+(t-s)\cdot\lceil\log_{2}(d)\rceil+t+32
 \]
 
 \end_inset
@@ -296,6 +296,45 @@ To retrieve a value from a sparse encoded column, the bit vector has to
 Cluster Coding
 \end_layout
 
+\begin_layout Standard
+When applying cluster coding, the index vector gets divided into equally
+ sized blocks.
+ All blocks which contain only one distinct value are then compressed by
+ removing all but one occurence of the value within this block from the
+ index vector.
+ In addition, a bit vector is generated which indicates whether a block
+ has been compressed or not.
+ Therefore, cluster coding is applicable in cases where a column contains
+ only few distinct values which form blocks innately.
+ For instance, a column containing the alternating values 1, 2 and 3 would
+ be the worst case for cluster coding, while it could be compressed through
+ run length coding optimally, provided that the table can be ordered by
+ this column.
+\end_layout
+
+\begin_layout Standard
+To retrieve the value of a given index 
+\begin_inset Formula $i$
+\end_inset
+
+, the corresponding block has to be determined first through an integer
+ division of the index and the block size 
+\begin_inset Formula $b$
+\end_inset
+
+.
+ The actual position within the index vector then can be determined by calculati
+ng 
+\begin_inset Formula $i-c\cdot(b-1)$
+\end_inset
+
+, where 
+\begin_inset Formula $c$
+\end_inset
+
+ is the number of set bits in the bit vector up to the corresponding block.
+\end_layout
+
 \begin_layout Subsubsection
 Indirect Coding
 \end_layout
@@ -313,11 +352,32 @@ Estimation of Main Memory Consumption
 \end_layout
 
 \begin_layout Section
-Impact on INSERT Performance
+INSERT Performance
+\end_layout
+
+\begin_layout Itemize
+Was bringt Insert Only / Verzicht auf Keys, warum kein Problem
+\end_layout
+
+\begin_layout Itemize
+Messbarer Unterschied Insert Float / Int?
+\end_layout
+
+\begin_layout Itemize
+Wie wirkt sich Kompression auf Insert Rate aus
 \end_layout
 
 \begin_layout Section
-Impact on SELECT Performance
+SELECT Performance
+\end_layout
+
+\begin_layout Itemize
+Wie wirkt sich Kompression auf Select aus?
+\end_layout
+
+\begin_layout Itemize
+Bigint vs.
+ Float Aggregation
 \end_layout
 
 \begin_layout Section
