@@ -282,6 +282,17 @@ If the occurences of the most frequent value are spread throughout a column,
 \begin_layout Standard
 bits.
  In addition, a prefix coding could be applied to the bit vector.
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Abweichung vom zitierten Paper!
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -307,9 +318,30 @@ When applying cluster coding, the index vector gets divided into equally
  Therefore, cluster coding is applicable in cases where a column contains
  only few distinct values which form blocks innately.
  For instance, a column containing the alternating values 1, 2 and 3 would
- be the worst case for cluster coding, while it could be compressed through
- run length coding optimally, provided that the table can be ordered by
- this column.
+ be the worst case for cluster coding.
+ In the best case, a column could be compressed to 
+\begin_inset Formula 
+\[
+\frac{t}{b}\cdot\lceil\log_{2}(d)\rceil+\frac{t}{b}
+\]
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Rundung? Im optimalfall nicht nötig, aber...?
+\end_layout
+
+\end_inset
+
+bits, where 
+\begin_inset Formula $b$
+\end_inset
+
+ is the block size.
 \end_layout
 
 \begin_layout Standard
@@ -317,9 +349,8 @@ To retrieve the value of a given index
 \begin_inset Formula $i$
 \end_inset
 
-, the corresponding block has to be determined first through an integer
- division of the index and the block size 
-\begin_inset Formula $b$
+, the corresponding block has to be determined first by calculating 
+\begin_inset Formula $\lfloor\frac{i}{b}\rfloor$
 \end_inset
 
 .
@@ -328,11 +359,32 @@ ng
 \begin_inset Formula $i-c\cdot(b-1)$
 \end_inset
 
-, where 
+,
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Corner Cases überprüfen!
+\end_layout
+
+\end_inset
+
+ where 
 \begin_inset Formula $c$
 \end_inset
 
  is the number of set bits in the bit vector up to the corresponding block.
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Komplizierte Erklärung
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
