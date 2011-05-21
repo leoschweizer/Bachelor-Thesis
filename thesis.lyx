@@ -170,20 +170,20 @@ Domain Coding
 
 \begin_layout Standard
 Domain coding or dictionary compression is the fundamental compression algorithm
- which is utilized in all situations and independently from other compression
- algorithms.
+ which is utilized regardless of data types and structures and independently
+ from other compression algorithms.
  All original values of a column are stored in a sorted dictionary and the
  column itself is represented as index vector consisting of ordinal references
  to this dictionary.
  Thus, a column containing 
-\begin_inset Formula $n$
+\begin_inset Formula $d$
 \end_inset
 
  distinct values of an arbitrary type and a total of 
 \begin_inset Formula $t$
 \end_inset
 
- values can optimally be represented with 
+ values can be represented with 
 \begin_inset Formula 
 \[
 t\cdot\lceil\log_{2}(d)\rceil
@@ -195,11 +195,15 @@ t\cdot\lceil\log_{2}(d)\rceil
 \end_layout
 
 \begin_layout Standard
-bits.
+bits optimally.
  The size of the dictionary itself has to be added to the total amount of
- required main memory, which especially carries weight when the record set
+ required main memory, which carries weight especially when the record set
  contains a high percentage of distinct values.
- Aside from the reduction of memory consumption, this method also entails
+ 
+\end_layout
+
+\begin_layout Standard
+Aside from the reduction of memory consumption, this method also entails
  an acceleration of processing speed due to the handling of smaller data
  volumes on a per request basis and the optimization of processing units
  for ordinal types on the hardware layer.
@@ -207,6 +211,15 @@ bits.
 
 \begin_layout Subsubsection
 Prefix Coding
+\end_layout
+
+\begin_layout Standard
+Prefix coding is powerful in such cases where a column contains one specific
+ value very often (e.g.
+ the NULL-value) and the table can be sorted by this column such that this
+ value occurs at the beginning of this column.
+ The prefix of equal values is then removed from the index vector completely.
+ The prefix value and the number of occurrences are saved separately.
 \end_layout
 
 \begin_layout Subsubsection
