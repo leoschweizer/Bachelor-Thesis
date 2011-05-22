@@ -319,7 +319,15 @@ When applying cluster coding, the index vector gets divided into equally
  only few distinct values which form blocks innately.
  For instance, a column containing the alternating values 1, 2 and 3 would
  be the worst case for cluster coding.
- In the best case, a column could be compressed to 
+ In the best case, a column with a total of 
+\begin_inset Formula $t$
+\end_inset
+
+ and 
+\begin_inset Formula $d$
+\end_inset
+
+ distinct values could be compressed to 
 \begin_inset Formula 
 \[
 \frac{t}{b}\cdot\lceil\log_{2}(d)\rceil+\frac{t}{b}
@@ -327,21 +335,15 @@ When applying cluster coding, the index vector gets divided into equally
 
 \end_inset
 
-
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Rundung? Im optimalfall nicht nötig, aber...?
-\end_layout
-
-\end_inset
-
 bits, where 
 \begin_inset Formula $b$
 \end_inset
 
- is the block size.
+ is the block size and 
+\begin_inset Formula $b\mid t$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -389,6 +391,25 @@ Komplizierte Erklärung
 
 \begin_layout Subsubsection
 Indirect Coding
+\end_layout
+
+\begin_layout Standard
+Just like cluster coding, indirect coding is based on a division of the
+ index vector into blocks of equal size.
+ However, a domain coding of these blocks takes place.
+ Thus, every block can have its own dictionary as additional level of indirectio
+n between the actual value stored in the global dictionary and the bit vector
+ pointing to this value from the index vector.
+ Sharing dictionaries among subsequent blocks is possible as long as adding
+ new values to the dictionary wouldn't increase the size of the bit vector
+ representing the key.
+ Furthermore, blocks with a high percentage of distinct values still can
+ use the global dictionary directly.
+\end_layout
+
+\begin_layout Standard
+Such beeing the case, indirect coding is particularly powerful in columns
+ which contain blocks with few distinct values.
 \end_layout
 
 \begin_layout Subsubsection
