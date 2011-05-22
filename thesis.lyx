@@ -477,8 +477,11 @@ For this reason, the technique used in column stores is slightly different.
  removed from the index vector.
  Additionally, a second vector is generated.
  It contains the starting index of the index vectors corresponding entry.
- Thus, run length encoding reduces the size of a sorted column containing
- a total of 
+ Thus, run length encoding reduces the size of a 
+\emph on
+sorted
+\emph default
+ column containing a total of 
 \begin_inset Formula $t$
 \end_inset
 
