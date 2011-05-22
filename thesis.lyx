@@ -164,6 +164,20 @@ Compression
 Lightweight Column Compression Techniques
 \end_layout
 
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Einteilung / Überblick, Verweis auf Bit Compression, Variable Byte Coding,
+ PFOR -> nicht Gegenstand der Betrachtung
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsubsection
 Domain Coding
 \end_layout
@@ -408,12 +422,82 @@ n between the actual value stored in the global dictionary and the bit vector
 \end_layout
 
 \begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Datenstrukturen, Dekodierung?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Such beeing the case, indirect coding is particularly powerful in columns
  which contain blocks with few distinct values.
 \end_layout
 
 \begin_layout Subsubsection
-Run Length Coding
+Run Length Encoding
+\end_layout
+
+\begin_layout Standard
+Run length encoding is a very simple lossless compression algorithm which
+ unfolds its full potential in sorted columns.
+\end_layout
+
+\begin_layout Standard
+According to the approach published by Golomb 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Golomb66"
+
+\end_inset
+
+, sequences of a value (socalled 
+\begin_inset Quotes eld
+\end_inset
+
+runs
+\begin_inset Quotes erd
+\end_inset
+
+) are replaced by a single occurence of this value and the length of the
+ original sequence.
+ Due to read performance losses, this method is not applicable for column
+ stores in its original form, as all preceding values of a given index would
+ have to be touched in order to find the actual value.
+\end_layout
+
+\begin_layout Standard
+For this reason, the technique used in column stores is slightly different.
+ To compress a column, all contiguous subsequent occurences of a value are
+ removed from the index vector.
+ Additionally, a second vector is generated.
+ It contains the starting index of the index vectors corresponding entry.
+ Thus, run length encoding reduces the size of a sorted column containing
+ a total of 
+\begin_inset Formula $t$
+\end_inset
+
+ and 
+\begin_inset Formula $d$
+\end_inset
+
+ distinct values to 
+\begin_inset Formula 
+\[
+d\cdot\lceil\log_{2}(d)\rceil+d\cdot\lceil\log_{2}(t)\rceil
+\]
+
+\end_inset
+
+ bits.
+ Furthermore, searching a given index becomes less complex compared to the
+ original algorithm due to the modification mentioned above.
+ For instance, it can be carried out in logarithmic time by binary search.
 \end_layout
 
 \begin_layout Subsection
@@ -430,6 +514,14 @@ INSERT Performance
 
 \begin_layout Itemize
 Was bringt Insert Only / Verzicht auf Keys, warum kein Problem
+\end_layout
+
+\begin_layout Itemize
+Was bringt Verzicht auf Logs
+\end_layout
+
+\begin_layout Itemize
+Was bringt Verzicht auf Autocommit
 \end_layout
 
 \begin_layout Itemize
