@@ -152,6 +152,14 @@ On the other hand, the deregulation of markets forces suppliers of electric
 Characteristics of Energy Event Data
 \end_layout
 
+\begin_layout Itemize
+Verbrauchsdaten (Firmen, Haushalte?!)
+\end_layout
+
+\begin_layout Itemize
+Erzeugerdaten (Enercon, Solarzeugs?)
+\end_layout
+
 \begin_layout Section
 Compression
 \end_layout
@@ -199,9 +207,9 @@ Domain coding or dictionary compression is the fundamental compression algorithm
 
  values can be represented with 
 \begin_inset Formula 
-\[
+\begin{equation}
 t\cdot\lceil\log_{2}(d)\rceil
-\]
+\end{equation}
 
 \end_inset
 
@@ -249,9 +257,9 @@ Prefix coding is powerful in such cases where a column contains one specific
 
  elements thus can be compressed to 
 \begin_inset Formula 
-\[
+\begin{equation}
 (t-p)\cdot\lceil\log_{2}(d)\rceil+64
-\]
+\end{equation}
 
 \end_inset
 
@@ -284,9 +292,9 @@ If the occurences of the most frequent value are spread throughout a column,
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
+\begin{equation}
 (t-s)\cdot\lceil\log_{2}(d)\rceil+t+32
-\]
+\end{equation}
 
 \end_inset
 
@@ -343,9 +351,9 @@ When applying cluster coding, the index vector gets divided into equally
 
  distinct values could be compressed to 
 \begin_inset Formula 
-\[
+\begin{equation}
 \frac{t}{b}\cdot\lceil\log_{2}(d)\rceil+\frac{t}{b}
-\]
+\end{equation}
 
 \end_inset
 
@@ -491,9 +499,9 @@ sorted
 
  distinct values to 
 \begin_inset Formula 
-\[
+\begin{equation}
 d\cdot\lceil\log_{2}(d)\rceil+d\cdot\lceil\log_{2}(t)\rceil
-\]
+\end{equation}
 
 \end_inset
 
@@ -504,7 +512,7 @@ d\cdot\lceil\log_{2}(d)\rceil+d\cdot\lceil\log_{2}(t)\rceil
 \end_layout
 
 \begin_layout Subsection
-..
+[Anwendung auf Energiedaten]
 \end_layout
 
 \begin_layout Subsection
