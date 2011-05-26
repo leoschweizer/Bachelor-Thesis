@@ -149,15 +149,64 @@ On the other hand, the deregulation of markets forces suppliers of electric
 \end_layout
 
 \begin_layout Section
-Characteristics of Energy Event Data
+[AMI]
+\end_layout
+
+\begin_layout Subsection
+[
+\begin_inset Quotes eld
+\end_inset
+
+Tatsächliche
+\begin_inset Quotes erd
+\end_inset
+
+ Architektur]
+\end_layout
+
+\begin_layout Subsection
+[Simulation -> 
+\begin_inset Quotes eld
+\end_inset
+
+Implementation
+\begin_inset Quotes erd
+\end_inset
+
+]
 \end_layout
 
 \begin_layout Itemize
-Verbrauchsdaten (Firmen, Haushalte?!)
+Insbesondere Abweichungen zu 2.1 (MDUS)
 \end_layout
 
 \begin_layout Itemize
-Erzeugerdaten (Enercon, Solarzeugs?)
+Datenbank / Central System als Bottleneck -> Nur Betrachtung dessen in dieser
+ Arbeit
+\end_layout
+
+\begin_layout Section
+[(Insert) Performance]
+\end_layout
+
+\begin_layout Itemize
+Was bringt Insert Only / Verzicht auf Keys, warum kein Problem
+\end_layout
+
+\begin_layout Itemize
+Was bringt Verzicht auf Logs
+\end_layout
+
+\begin_layout Itemize
+Was bringt Verzicht auf Autocommit
+\end_layout
+
+\begin_layout Itemize
+Messbarer Unterschied Insert Float / Int?
+\end_layout
+
+\begin_layout Itemize
+Select / Aggregation?
 \end_layout
 
 \begin_layout Section
@@ -519,41 +568,8 @@ d\cdot\lceil\log_{2}(d)\rceil+d\cdot\lceil\log_{2}(t)\rceil
 Estimation of Main Memory Consumption
 \end_layout
 
-\begin_layout Section
-INSERT Performance
-\end_layout
-
-\begin_layout Itemize
-Was bringt Insert Only / Verzicht auf Keys, warum kein Problem
-\end_layout
-
-\begin_layout Itemize
-Was bringt Verzicht auf Logs
-\end_layout
-
-\begin_layout Itemize
-Was bringt Verzicht auf Autocommit
-\end_layout
-
-\begin_layout Itemize
-Messbarer Unterschied Insert Float / Int?
-\end_layout
-
-\begin_layout Itemize
-Wie wirkt sich Kompression auf Insert Rate aus
-\end_layout
-
-\begin_layout Section
-SELECT Performance
-\end_layout
-
-\begin_layout Itemize
-Wie wirkt sich Kompression auf Select aus?
-\end_layout
-
-\begin_layout Itemize
-Bigint vs.
- Float Aggregation
+\begin_layout Subsection
+Impact on Insert Performance
 \end_layout
 
 \begin_layout Section
