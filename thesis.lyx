@@ -165,10 +165,16 @@ On the other hand, the deregulation of markets forces suppliers of electric
 \end_layout
 
 \begin_layout Section
-[AMI]
+[AMI und Simulation]
 \end_layout
 
 \begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:AMI"
+
+\end_inset
+
 [
 \begin_inset Quotes eld
 \end_inset
@@ -228,10 +234,94 @@ Implementation
 \end_inset
 
 ]
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Abweichungen zu 2.1 (MDUS), DB als Bottleneck
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As an extensive rollout of smart metering devices and the corresponding
+ metering infrastructure (cf.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:AMI"
+
+\end_inset
+
+) hasn't taken place yet in Germany, a simulation had to be used to generate
+ a constant event stream of significant scale.
+ Since the generated data should not only be used for stress testing, but
+ also for real time analyses and visualization, various requirements had
+ to be met by the simulation system.
+\end_layout
+
+\begin_layout Standard
+The system had to be capable to simulate at least 100 million smart meters,
+ each initiating one reading event per 15 minutes.
+ Furthermore, the number of simulated metering devices should be freely
+ configurable.
+ On the one hand, the system thereby can be used to simulate divergent numbers
+ of customers for energy providers of different size.
+ On the other hand, the system can be used to simulate the projected total
+ amount of events in the future smart grid of Germany.
+\end_layout
+
+\begin_layout Standard
+In avoidance of unfavorable and advantageous effects of random data, for
+ instance on compression rates, and with regard to data analysis and visualizati
+on tests, the generated readings should be based on real power consumption
+ data.
+ Furthermore, the simulation should be aware of single customers.
+ That means that for a given customer id, reading events should occur in
+ 15 minute intervals approximately.
+ Besides, the unity of all readings of any simulated customer should form
+ a realistic consumption behaviour over extended periods of time, e.g.
+ days, weeks, months and years.
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Bisher keine Rede von 
+\begin_inset Quotes eld
+\end_inset
+
+customern
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In order to meet these requirements, the simulation system has been split
+ up into three components, which are depicted in Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Simulation"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
+placement h
 wide false
 sideways false
 status open
@@ -248,6 +338,12 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Simulation"
+
+\end_inset
+
 Components of the AMI simulation
 \end_layout
 
@@ -261,13 +357,289 @@ Components of the AMI simulation
 
 \end_layout
 
-\begin_layout Itemize
-Insbesondere Abweichungen zu 2.1 (MDUS)
+\begin_layout Subsubsection
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Data-Producer"
+
+\end_inset
+
+Data Producer
 \end_layout
 
-\begin_layout Itemize
-Datenbank / Central System als Bottleneck -> Nur Betrachtung dessen in dieser
- Arbeit
+\begin_layout Standard
+An instance of the data producer, which is implemented as Java executable,
+ represents any number of smart meters, mostly limited by the number of
+ threads the system it is running on can handle.
+ One instance of the data producer can connect to exactly one concentrator
+ (cf.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Concentrator"
+
+\end_inset
+
+).
+ A dedicated, persistent TCP/IP connection is built between the data producer
+ and a concentrator per thread.
+ Thereby, one thread simulates up to XYZ smart meters.
+\end_layout
+
+\begin_layout Standard
+The data producer expects two main input parameters: The initial timestamp,
+ which defaults to the current local time, and a standard load profile,
+ which defaults to the H0 profile published by the VDEW
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Verband der Elektrizitätswirtschaft e.V.: association of the electricity industry
+\end_layout
+
+\end_inset
+
+.
+ Such profiles contain the average consumption of a specific customer base
+ (which are residential customers in the case of the H0 profile) over a
+ period of one year.
+ They consist of counter readings or consumption deltas in 15 minute intervals,
+ yielding 35040 values for non-leapyears.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Generation based on input parameters
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Every simulated smart meter is identifiable by a unique integer device id,
+ which is equivalent to a customer id, since supplier changes and the like
+ aren't relevant for our simulation.
+ The data producer generates discrete reading events for each of these identifie
+rs every 15 minutes and sends them to the assigned concentrator instantly.
+ Thereby, the identifiers are spread randomly accross the 15 minute intervall,
+ but keep their time slot across multiple intervals as long as the simulation
+ is running.
+\end_layout
+
+\begin_layout Standard
+Since we execute the simulation over an ethernet network via TCP/IP, data
+ loss is of no concern.
+ Thus, this push architecture could be favored over the pull approach which
+ dominates in real world metering infrastructures.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Sample readings generated by the data producer
+\end_layout
+
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle" tabularwidth="60col%">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0pt">
+<row topspace="default" bottomspace="default">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Smart Meter ID
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Timestamp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Value
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default">
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+32202775
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1306612800
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+26
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default">
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+32202775
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1306613700
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+25
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default">
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+32202775
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default">
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+32202775
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Concentrator"
+
+\end_inset
+
+Concentrator
+\end_layout
+
+\begin_layout Subsubsection
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Database-Client"
+
+\end_inset
+
+Database Client
+\end_layout
+
+\begin_layout Subsubsection
+Database
 \end_layout
 
 \begin_layout Section
