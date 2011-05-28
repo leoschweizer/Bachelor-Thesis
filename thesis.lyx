@@ -3,6 +3,11 @@
 \begin_document
 \begin_header
 \textclass llncs
+\begin_preamble
+\usepackage{graphicx}
+\graphicspath{{.//}}
+\end_preamble
+\options final
 \use_default_options true
 \maintain_unincluded_children false
 \language english
@@ -19,7 +24,7 @@
 \font_sf_scale 100
 \font_tt_scale 100
 
-\graphics default
+\graphics pdftex
 \default_output_format default
 \output_sync 0
 \bibtex_command default
@@ -174,6 +179,37 @@ Implementation
 \end_inset
 
 ]
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/data-simulator.svg
+	width 90col%
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Components of the AMI simulation
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
