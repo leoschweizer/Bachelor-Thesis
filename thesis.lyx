@@ -89,6 +89,10 @@ Hasso Plattner Institute
 \begin_inset Newline newline
 \end_inset
 
+Chair Enterprise Platform and Integration Concepts
+\begin_inset Newline newline
+\end_inset
+
 
 \begin_inset ERT
 status open
@@ -225,25 +229,7 @@ key "conf/lcn/SchapranowKZP10"
 \end_layout
 
 \begin_layout Subsection
-[
-\begin_inset Quotes eld
-\end_inset
-
-Implementation
-\begin_inset Quotes erd
-\end_inset
-
-]
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Abweichungen zu 2.1 (MDUS), DB als Bottleneck
-\end_layout
-
-\end_inset
-
-
+[Anforderungen an Simulation]
 \end_layout
 
 \begin_layout Standard
@@ -306,9 +292,13 @@ customern
 
 \end_layout
 
+\begin_layout Subsection
+[Implementierung]
+\end_layout
+
 \begin_layout Standard
-In order to meet these requirements, the simulation system has been split
- up into three components, which are depicted in Fig.
+Our simulation of an Advanced Metering Infrastructure has been split up
+ into three components, which are depicted in Fig.
  
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -317,6 +307,43 @@ reference "fig:Simulation"
 \end_inset
 
 .
+ However, not all parts of the AMI have a counterpart in our simulation.
+ Namely the Meter Data Unification and Synchronization (MDUS) system is
+ missing, since there is no gain in simulating different vendor specific
+ protocols and data formats.
+ In the first place, the MDUS systems don't have to store data, in fact
+ they transform it.
+ That means that in order to scale, only the throughput has to be enhanced,
+ which can be achieved easily by additional hardware and parallelisation.
+ Therefore, the MDUS system should not constitue the AMIs limiting factor.
+\end_layout
+
+\begin_layout Standard
+To a greater degree, the database which has to process, to store and to
+ analyse all readings is the bottleneck of the whole system.
+ At this point, scaling can not be reached simply by adding more hardware,
+ in the sense of multiplying database hosts and instances.
+ For example, all instances would have to be utilized for analytical queries
+ like the overall consumption of all customers, with the effect that the
+ partitioning of the data doesn't necessarily result in a lower overall
+ load for each single instance.
+\end_layout
+
+\begin_layout Standard
+Thus, the primary target of our simulation is the generation of huge amounts
+ of insert load rather than a realistic representation of the AMI.
+ In this way, the limits of an in-memory based central system can be investigate
+d.
+ All other components of the metering infrastructure can be scaled easily,
+ which is the reason why this paper focuses on the performance of the database
+ system itself.
+\end_layout
+
+\begin_layout Standard
+In the following, the data producer, which constitutes the smart metering
+ component of the AMI, the concentrator, which embodies the event aggregation
+ component and the database client, which represents the interface of the
+ industry-specific enterprise application are described in detail.
 \end_layout
 
 \begin_layout Standard
@@ -898,8 +925,36 @@ Due to performance advantages of ODBC over JDBC, inserts are processed via
 Simulation Environment
 \end_layout
 
+\begin_layout Itemize
+Hardware (DB, Producer)
+\end_layout
+
+\begin_layout Itemize
+Topologie
+\end_layout
+
+\begin_layout Itemize
+Schema, in das geinsertet wird
+\end_layout
+
+\begin_layout Subsection
+Results
+\end_layout
+
+\begin_layout Itemize
+Last auf der Datenbank
+\end_layout
+
+\begin_layout Itemize
+Inserzeit für Batches
+\end_layout
+
+\begin_layout Itemize
+Jeweils mit unterschiedlichen Batchsizes
+\end_layout
+
 \begin_layout Section
-[(Insert) Performance]
+[Optimizing (Insert) Performance]
 \end_layout
 
 \begin_layout Itemize
