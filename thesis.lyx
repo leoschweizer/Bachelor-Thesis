@@ -225,7 +225,7 @@ key "conf/lcn/SchapranowKZP10"
 \end_layout
 
 \begin_layout Subsection
-[Simulation -> 
+[
 \begin_inset Quotes eld
 \end_inset
 
@@ -755,8 +755,8 @@ reference "tab:Sample-readings"
 \end_inset
 
 .
- into a column based format, which is beneficial for inserting data into
- column based tables.
+ The resulting column based format is very beneficial for inserting data
+ into column based tables.
 \end_layout
 
 \begin_layout Standard
@@ -848,8 +848,54 @@ name "sub:Database-Client"
 Database Client
 \end_layout
 
-\begin_layout Subsubsection
-Database
+\begin_layout Standard
+Of the three components depicted in Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Simulation"
+
+\end_inset
+
+, the database client implements the least logic.
+ The main purpose of this component is to expose a specialised interface
+ for inserting batches of readings into the in-memory database, the back-end
+ of our system.
+\end_layout
+
+\begin_layout Standard
+It accepts TCP/IP connections from an arbitrary number of concentrators
+ and inserts the incoming batches into the database in a non-blocking fashion.
+ Thus, it can be avoided that the database client becomes the bottleneck
+ of the system rather then the database itself.
+ Since the concentrators already convert the readings into the desired format,
+ no additional transformations of the data have to be carried out by the
+ database client.
+ The measures that have been taken to speed up the process of inserting
+ as much as possible in order to reduce the overall load of the database
+ and to enable the simultaneous processing of analytical requests are presented
+ in Sect.
+ 3.
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Querverweis!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Due to performance advantages of ODBC over JDBC, inserts are processed via
+ the former, so this component of the simulation is implemented in C++ as
+ native executable.
+\end_layout
+
+\begin_layout Subsection
+Simulation Environment
 \end_layout
 
 \begin_layout Section
