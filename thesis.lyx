@@ -369,8 +369,7 @@ Data Producer
 
 \begin_layout Standard
 An instance of the data producer, which is implemented as Java executable,
- represents any number of smart meters, mostly limited by the number of
- threads the system it is running on can handle.
+ represents any number of smart meters.
  One instance of the data producer can connect to exactly one concentrator
  (cf.
  
@@ -382,19 +381,22 @@ reference "sub:Concentrator"
 
 ).
  A dedicated, persistent TCP/IP connection is built between the data producer
- and a concentrator per thread.
+ and a concentrator for each thread the data producer is spawning.
  Thereby, one thread simulates up to XYZ smart meters.
+ Thus, the number of smart meters that can be simulated by a single instance
+ is mostly limited by the number of threads the host system is capable to
+ handle and the network capacity.
 \end_layout
 
 \begin_layout Standard
-The data producer expects two main input parameters: The initial timestamp,
+The data producer expects two main input parameters: An initial timestamp,
  which defaults to the current local time, and a standard load profile,
- which defaults to the H0 profile published by the VDEW
+ which defaults to the H0 profile published by the BDEW
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-Verband der Elektrizitätswirtschaft e.V.: association of the electricity industry
+German Energy and Water Association
 \end_layout
 
 \end_inset
@@ -402,40 +404,89 @@ Verband der Elektrizitätswirtschaft e.V.: association of the electricity indust
 .
  Such profiles contain the average consumption of a specific customer base
  (which are residential customers in the case of the H0 profile) over a
- period of one year.
+ period of one or more years.
  They consist of counter readings or consumption deltas in 15 minute intervals,
  yielding 35040 values for non-leapyears.
-\end_layout
-
-\begin_layout Standard
+ For reasons depicted in Sect.
+ 4.3
 \begin_inset Note Note
 status open
 
 \begin_layout Plain Layout
-Generation based on input parameters
+Querverweis!
 \end_layout
 
 \end_inset
 
-
+, we prefer consumption deltas over counter readings.
 \end_layout
 
 \begin_layout Standard
-Every simulated smart meter is identifiable by a unique integer device id,
- which is equivalent to a customer id, since supplier changes and the like
- aren't relevant for our simulation.
- The data producer generates discrete reading events for each of these identifie
-rs every 15 minutes and sends them to the assigned concentrator instantly.
+Based on these two input parameters, readings are generated.
+ The initial timestamp is used to calculate the current simulated day and
+ time.
+ After that, the according consumption value is read from the standard load
+ profile.
+ A random variance is added to this value 
+\begin_inset Formula $v$
+\end_inset
+
+ for every generated reading 
+\begin_inset Formula $r_{\mathrm{{v}}}$
+\end_inset
+
+ such that 
+\begin_inset Formula $v-0,2\cdot v\leq r_{\mathrm{{v}}}\leq v+0,2\cdot v$
+\end_inset
+
+.
+ Furthermore, the timestamp of the generated reading is rounded down to
+ 15 minute intervals.
+ For instance, 13:14:55 would be replaced by 13:00:00 (cf.
+ 4.3
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Querverweis!
+\end_layout
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+The third and last component of a reading is the unique integer device id
+ by which every simulated smart meter can be identified.
+ In our scenario, this device id is equivalent to a customer id, since relocatio
+ns and the like aren't relevant for us.
+\end_layout
+
+\begin_layout Standard
+The data producer generates discrete reading events for each of these identifier
+s every 15 minutes and sends them to the assigned concentrator instantly.
  Thereby, the identifiers are spread randomly accross the 15 minute intervall,
  but keep their time slot across multiple intervals as long as the simulation
  is running.
+ Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Sample-readings"
+
+\end_inset
+
+ shows one hour of readings for a given smart meter, starting at Sat, 28
+ May 2011 20:00:00 GMT.
+ During this hour, the household associated with the smart meter carrying
+ the device id 32202775 had a total consumption of 0,143kWh.
 \end_layout
 
 \begin_layout Standard
 Since we execute the simulation over an ethernet network via TCP/IP, data
  loss is of no concern.
- Thus, this push architecture could be favored over the pull approach which
- dominates in real world metering infrastructures.
+ Thus, the push architecture described here could be favored over the pull
+ approach which dominates in real world metering infrastructures.
 \end_layout
 
 \begin_layout Standard
@@ -449,6 +500,12 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:Sample-readings"
+
+\end_inset
+
 Sample readings generated by the data producer
 \end_layout
 
@@ -484,7 +541,7 @@ Timestamp
 \begin_inset Text
 
 \begin_layout Plain Layout
-Value
+Value [Wh]
 \end_layout
 
 \end_inset
@@ -513,7 +570,7 @@ Value
 \begin_inset Text
 
 \begin_layout Plain Layout
-26
+36
 \end_layout
 
 \end_inset
@@ -542,7 +599,7 @@ Value
 \begin_inset Text
 
 \begin_layout Plain Layout
-25
+37
 \end_layout
 
 \end_inset
@@ -562,7 +619,7 @@ Value
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+1306614600
 \end_layout
 
 \end_inset
@@ -571,7 +628,7 @@ Value
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+35
 \end_layout
 
 \end_inset
@@ -591,7 +648,7 @@ Value
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+1306615500
 \end_layout
 
 \end_inset
@@ -600,7 +657,7 @@ Value
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+35
 \end_layout
 
 \end_inset
