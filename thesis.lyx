@@ -372,6 +372,7 @@ An instance of the data producer, which is implemented as Java executable,
  represents any number of smart meters.
  One instance of the data producer can connect to exactly one concentrator
  (cf.
+ Sect.
  
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -683,6 +684,158 @@ name "sub:Concentrator"
 \end_inset
 
 Concentrator
+\end_layout
+
+\begin_layout Standard
+Just like the data producer, the concentrator is implemented as Java executable.
+ Its purpose is to aggregate events and to forward these aggregated batches
+ to a database client (cf.
+ Sect.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Database-Client"
+
+\end_inset
+
+), thus reducing the number of connections and insert events visible to
+ the central database system.
+\end_layout
+
+\begin_layout Standard
+A concentrator accepts any number of TCP/IP connections from any number
+ of data producers (cf.
+ Sect.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Data-Producer"
+
+\end_inset
+
+).
+ In turn, the concentrator can connect to one or more database clients,
+ again via TCP/IP.
+ The primary reason for supporting multiple database clients is the evaluation
+ of distributed database systems, which is the subject of another thesis
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Verweis
+\end_layout
+
+\end_inset
+
+.
+ In this case, the concentrator is provided with the data partitioning instructi
+ons and forwards the readings to the proper destination database instance.
+\end_layout
+
+\begin_layout Standard
+The concentrator collects incoming readings until the batch size reaches
+ a configurable threshold (default: 60000 readings) or the oldest reading
+ in the batch exceeds a certain age (default: 5 minutes).
+ Once this happens, the batch of readings gets converted into a column-wise
+ fashion and is sent to the corresponding database client together with
+ the number of readings contained in the batch.
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Concentrator-Output"
+
+\end_inset
+
+ illustrates this conversion with the aid of the first two records of the
+ row based data shown in Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Sample-readings"
+
+\end_inset
+
+.
+ into a column based format, which is beneficial for inserting data into
+ column based tables.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/row-data.png
+	width 80col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/column-data.png
+	width 80col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Concentrator-Output"
+
+\end_inset
+
+The first two records from Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Sample-readings"
+
+\end_inset
+
+ in row format and formated as output of a concentrator
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Due to the reasons outlined in Sect.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Data-Producer"
+
+\end_inset
+
+, the push approach could again be favored over a polling based architecture.
 \end_layout
 
 \begin_layout Subsubsection
