@@ -464,7 +464,7 @@ Based on these two input parameters, readings are generated.
 \end_inset
 
  such that 
-\begin_inset Formula $v-0,2\cdot v\leq r_{\mathrm{{v}}}\leq v+0,2\cdot v$
+\begin_inset Formula $0\leq v-0,20\cdot v\leq r_{\mathrm{{v}}}\leq v+0,20\cdot v$
 \end_inset
 
 .
@@ -1334,6 +1334,76 @@ d\cdot\lceil\log_{2}(d)\rceil+d\cdot\lceil\log_{2}(t)\rceil
 
 \begin_layout Subsection
 Estimation of Main Memory Consumption
+\end_layout
+
+\begin_layout Standard
+To estimate the main memory consumption of large customer bases, profiles
+ containing one year of readings have been generated with the assistance
+ of the H0-profile.
+ Each profile consists of 35040 readings, and the value 
+\begin_inset Formula $r_{\mathrm{v}}$
+\end_inset
+
+ of each reading differs from the equivalent value 
+\begin_inset Formula $v$
+\end_inset
+
+ from the H0 profile randomly such that 
+\begin_inset Formula $0\leq v-v\cdot0,20\leq r_{\mathrm{v}}\leq v+v\cdot0,20$
+\end_inset
+
+.
+ The smart-meter or customer ids have been chosen from 
+\begin_inset Formula $[1,n]$
+\end_inset
+
+, where 
+\begin_inset Formula $n$
+\end_inset
+
+ is the number of generated profiles.
+ However, the actual interval doesn't have a considerable effect on memory
+ consumption due to the effects of dictionary compression.
+ The year 2010 served as date range for the readings.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plots/consumption-estimation.eps
+	width 75col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Estimation of main memory consumption for the given number of households
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
