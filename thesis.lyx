@@ -1054,7 +1054,7 @@ CREATE INSERT ONLY COLUMN TABLE readings2 (smartmeterid INTEGER, datetime
 \end_layout
 
 \begin_layout Standard
-\begin_inset Float table
+\begin_inset Float figure
 wide false
 sideways false
 status open
@@ -1064,11 +1064,19 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plots/insert-only.eps
+	width 80col%
+
+\end_inset
+
+
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Comparison of insert-only and standard column tables in terms of insert
- performance
+Comparison of insert performance of tables with and without explicit primary
+ key
 \end_layout
 
 \end_inset
@@ -1120,6 +1128,45 @@ A column store consists of a read-optimized main store and a write-optimized
  less severe.
  In the worst case, all meter readings which haven't been merged yet would
  be lost temporarily.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plots/logging.eps
+	width 80col%
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Comparison of insert performance of ...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
