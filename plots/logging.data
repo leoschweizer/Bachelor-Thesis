@@ -1,8 +1,8 @@
-# index	time	caption
-1	0	 
-2 0	 
-3	219	"Logs enabled"
-4	0	 
-5	201	"Logs disabled"
-6	0	 
-7	0	 
+#	time	sd	caption
+1	0	0	 
+2 0	0	 
+3	177	18	"Logs enabled"
+4	0	0	 
+5	166	16	"Logs disabled"
+6	0	0	 
+7	0	0	 

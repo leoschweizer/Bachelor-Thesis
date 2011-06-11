@@ -954,19 +954,155 @@ Jeweils mit unterschiedlichen Batchsizes
 \end_layout
 
 \begin_layout Section
-[Optimizing (Insert) Performance]
+Acceleration of INSERT Statements
 \end_layout
 
-\begin_layout Itemize
-Messbarer Unterschied Insert Float / Int?
-\end_layout
-
-\begin_layout Subsection
-[Prepared Statements / Batch Inserts] 
+\begin_layout Standard
+[Verweis auf autocommit, merge, hosts, schemas]
 \end_layout
 
 \begin_layout Subsection
-Reducing Commit Frequency
+Prepared Statements
+\end_layout
+
+\begin_layout Standard
+The naive approach to insert multiple rows into a table is to execute single
+ insert statements sequentially.
+ The problem in doing so is that parsing and the generation of an execution
+ plan is carried out again for each statement, although they are equivalent.
+ The solution to this issue is the utilization of prepared statements.
+ As its name implies, afore-mentioned tasks get executed only once and the
+ statement can be reused for subsequent inserts.
+ 
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:naive-insert"
+
+\end_inset
+
+ compares the performance of the usage of standard and prepared statements.
+ First, 100,000 readings have been inserted into an empty instance of [reference
+] by generating a new statement for each reading.
+ After 10 runs, the total insert time averages 3 minutes 25.540 seconds (standard
+ deviation: 1.162 seconds).
+ When repeating the measurement using a prepared statement, the average
+ insert time gets reduced to 39.451 seconds (standard deviation: 310ms),
+ which is equivalent to a speed-up of over 80%.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plots/naive-prepared.eps
+	width 80col%
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:naive-insert"
+
+\end_inset
+
+...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Batch Inserts
+\end_layout
+
+\begin_layout Standard
+As an extension of prepared statements, most database interfaces offer a
+ possibility to execute batches of the same statement at once.
+ The executeBatch method implemented by JDBC 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "java/statement"
+
+\end_inset
+
+ or the array binding capabilities offered by ODBC 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "msdn/arrayBinding"
+
+\end_inset
+
+ are examples for such functionality.
+ 
+\end_layout
+
+\begin_layout Standard
+In contrast to the execution of 100,000 prepared, but discrete inserts (average:
+ 39.451 seconds, standard deviation: 310ms), the insert time can be further
+ reduced 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plots/prepared-batch.eps
+	width 80col%
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -986,7 +1122,14 @@ When investigating the nature of a smart-meter reading, it becomes evident
  Provided that meters normally don't record one point of time twice, saving
  such exceptional records might even be helpful for fraud and failure detection.
  Furthermore, keeping track of records might be a legal requirement in many
- countries.
+ countries 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "HPI/GrundKTZ/CeFda"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -1005,8 +1148,8 @@ The employed database system allows column tables without explicit primary
 \end_layout
 
 \begin_layout Standard
-To evaluate the benefits of insert-only tables, batches of 100,000 readings
- have been inserted into the tables shown in listing
+To evaluate the costs of explicit keys, batches of 100,000 readings have
+ been inserted into the tables shown in listing 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "lis:TablesInsertOnly"
@@ -1014,6 +1157,29 @@ reference "lis:TablesInsertOnly"
 \end_inset
 
 .
+ In each case, the measured time includes the generation of a prepared statement
+ containing 100,000 rows, the execution of this statement on an empty table
+ and a single commit at the end of this transaction.
+ Merge times are not included and logs were disabled during the insertion.
+ Both measurements have been repeated 1000 times.
+\end_layout
+
+\begin_layout Standard
+The results are depicted in fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Insert-Only"
+
+\end_inset
+
+.
+ Insertion into an insert-only table with explicit primary key take an average
+ of 612ms, with a standard deviation of 32ms.
+ In contrast, insertions into a table without any explicit keys average
+ 166ms, with a standard deviation of 16ms.
+ That means that insert times could be reduced by approximately 73% through
+ the omission of unnecessary keys.
 \end_layout
 
 \begin_layout Standard
@@ -1038,8 +1204,8 @@ name "lis:TablesInsertOnly"
 
 \end_inset
 
-CREATE COLUMN TABLE readings1 (smartmeterid INTEGER, datetime INTEGER, value
- INTEGER, PRIMARY KEY (smartmeterid, datetime))
+CREATE INSERT ONLY COLUMN TABLE readings1 (smartmeterid INTEGER, datetime
+ INTEGER, value INTEGER, PRIMARY KEY (smartmeterid, datetime))
 \end_layout
 
 \begin_layout Plain Layout
@@ -1075,6 +1241,12 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Insert-Only"
+
+\end_inset
+
 Comparison of insert performance of tables with and without explicit primary
  key
 \end_layout
@@ -1104,8 +1276,14 @@ Transacation logs are an important measure to safeguard the compliance of
  for performance benefits due to the supposed architecture of an advanced
  metering infrastructure.
  In particular, the ability to answer requests of meter readings on demand
- is ranked as minimum requirement for smart meters, which can store the
- reading history of at least one year at the same time.
+ is ranked as minimum requirement for smart meters 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "openmeter/requirements"
+
+\end_inset
+
+, which can store the reading history of at least one year at the same time.
  This implies that it might be feasible to accept the loss of recent meter
  readings in the case of a database failure, since they could just be requested
  again.
@@ -1115,7 +1293,14 @@ Transacation logs are an important measure to safeguard the compliance of
 A column store consists of a read-optimized main store and a write-optimized
  differential buffer.
  New rows are inserted into the differential buffer and transfered to the
- main store during the socalled merge process.
+ main store during the socalled merge process 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "DBLP:conf/dasfaa/KrugerGTPZF10"
+
+\end_inset
+
+.
  If strict ACID compliance is desired, both of these structures have to
  be recovered in the case of a failure.
  However, all records are written to a non-volatile medium during the merge
@@ -1128,6 +1313,40 @@ A column store consists of a read-optimized main store and a write-optimized
  less severe.
  In the worst case, all meter readings which haven't been merged yet would
  be lost temporarily.
+\end_layout
+
+\begin_layout Standard
+The second table shown in listing 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:TablesInsertOnly"
+
+\end_inset
+
+ was used to measure the impact of transaction logs on insert performance.
+ Again, the measured time includes the generation of a prepared statement
+ containing 100,000 rows, its execution on an empty table and a single commit
+ at the end of this transaction.
+ Merge times are not included and logs were disabled during the insertion.
+ The measurement has been repeated 1000 times.
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Logging"
+
+\end_inset
+
+ shows the results of this measurements.
+ With activated logging, inserts average 177ms (standard deviation: 18ms).
+ The same inserts take averagely 166ms (standard deviation: 16ms) when logging
+ is disabled.
+ In other words, transaction logs slow down the insert process by approximately
+ 6%.
+ Thus, abandoning transaction logs for insertions can be considered doubtful
+ for real world applications due to the comparatevely negligible impact.
 \end_layout
 
 \begin_layout Standard
@@ -1152,6 +1371,12 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Logging"
+
+\end_inset
+
 Comparison of insert performance of ...
 \end_layout
 
@@ -1160,13 +1385,13 @@ Comparison of insert performance of ...
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+[Parallelisation]
 \end_layout
 
 \begin_layout Section
@@ -1200,9 +1425,15 @@ Domain Coding
 \end_layout
 
 \begin_layout Standard
-Domain coding or dictionary compression is the fundamental compression algorithm
- which is utilized regardless of data types and structures and independently
- from other compression algorithms.
+Domain coding or dictionary compression 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "conf/btw/LemkeSF09,Abadi:2006:ICE:1142473.1142548,HPI/PlattnerZ/nHdai,Lemke:2010:SUQ:1881923.1881936"
+
+\end_inset
+
+ is the fundamental compression algorithm which is utilized regardless of
+ data types and structures and independently from other compression algorithms.
  All original values of a column are stored in a sorted dictionary and the
  column itself is represented as index vector consisting of ordinal references
  to this dictionary.
@@ -1245,8 +1476,15 @@ Prefix Coding
 \end_layout
 
 \begin_layout Standard
-Prefix coding is powerful in such cases where a column contains one specific
- value very often (e.g.
+Prefix coding 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "conf/btw/LemkeSF09,HPI/PlattnerZ/nHdai,Lemke:2010:SUQ:1881923.1881936"
+
+\end_inset
+
+ is powerful in such cases where a column contains one specific value very
+ often (e.g.
  the NULL-value) and the table can be sorted by this column such that this
  value occurs at the beginning of this column.
  The prefix of equal values is then removed from the index vector completely.
@@ -1285,7 +1523,14 @@ Sparse Coding
 
 \begin_layout Standard
 If the occurences of the most frequent value are spread throughout a column,
- sparse coding can be used to reduce the size of this column.
+ sparse coding 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "conf/btw/LemkeSF09,HPI/PlattnerZ/nHdai,Lemke:2010:SUQ:1881923.1881936"
+
+\end_inset
+
+ can be used to reduce the size of this column.
  In doing so, all occurences of the value are removed from the index vector
  and this socalled sparse value is saved once as reference into the dictionary,
  consuming 32 bits.
@@ -1339,8 +1584,14 @@ Cluster Coding
 \end_layout
 
 \begin_layout Standard
-When applying cluster coding, the index vector gets divided into equally
- sized blocks.
+When applying cluster coding 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "conf/btw/LemkeSF09,HPI/PlattnerZ/nHdai,Lemke:2010:SUQ:1881923.1881936"
+
+\end_inset
+
+, the index vector gets divided into equally sized blocks.
  All blocks which contain only one distinct value are then compressed by
  removing all but one occurence of the value within this block from the
  index vector.
@@ -1425,8 +1676,14 @@ Indirect Coding
 \end_layout
 
 \begin_layout Standard
-Just like cluster coding, indirect coding is based on a division of the
- index vector into blocks of equal size.
+Just like cluster coding, indirect coding 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "conf/btw/LemkeSF09,HPI/PlattnerZ/nHdai,Lemke:2010:SUQ:1881923.1881936"
+
+\end_inset
+
+ is based on a division of the index vector into blocks of equal size.
  However, a domain coding of these blocks takes place.
  Thus, every block can have its own dictionary as additional level of indirectio
 n between the actual value stored in the global dictionary and the bit vector
@@ -1489,12 +1746,20 @@ runs
 \end_layout
 
 \begin_layout Standard
-For this reason, the technique used in column stores is slightly different.
+For this reason, the technique used in column stores is slightly different
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "HPI/PlattnerZ/nHdai"
+
+\end_inset
+
+.
  To compress a column, all contiguous subsequent occurences of a value are
  removed from the index vector.
  Additionally, a second vector is generated.
  It contains the starting index of the index vectors corresponding entry.
- Thus, run length encoding reduces the size of a 
+ Thus, run length encoding can reduce the size of a 
 \emph on
 sorted
 \emph default
@@ -2766,7 +3031,6 @@ Conclusion
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-btprint "btPrintAll"
 bibfiles "thesis"
 options "C:/Users/Leo/AppData/Roaming/MiKTeX/2.9/tex/latex/lncs/splncs03"
 
