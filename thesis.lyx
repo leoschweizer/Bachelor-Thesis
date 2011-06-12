@@ -973,7 +973,6 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 Table READINGS_PK
 \end_layout
 
@@ -1857,11 +1856,11 @@ reference "sub:Lightweight-Column-Compression"
 
 , the process of minimizing the space requirements of smart-meter readings
  comes down to three tasks.
- First, the spreading of values has to be analyzed in order to evaluate
- potential benefits of common value suppression techniques.
- Secondly, the number of distinct values has to be reduced as far as possible
+ First, the number of distinct values has to be reduced as far as possible
  without losing relevant information in order to unfold the full potential
  of dictionary compression.
+ Secondly, the spreading of values has to be analyzed in order to evaluate
+ potential benefits of common value suppression techniques.
  And in the third place, the readings have to be sorted in such a way that
  contiguous blocks of equal values which are as wide as possible occur.
  As mentioned in sect.
@@ -1874,10 +1873,6 @@ reference "sub:Data-Producer"
 
 , the assumed model of meter readings consists of the three columns meter
  id, datetime and value.
-\end_layout
-
-\begin_layout Subsubsection
-Common Values
 \end_layout
 
 \begin_layout Subsubsection
@@ -1998,12 +1993,49 @@ key "capgemini/analyse"
 \end_inset
 
 .
- That means that average residential customers with a consumption of 3000kWh
+ That means that residential customers with an average consumption of 1000kWh
  per year would produce around 
-\begin_inset Formula $8\cdot3000\cdot1000=24,000,000$
+\begin_inset Formula $8\cdot1000\cdot1000=8,000,000$
 \end_inset
 
  distinct counter readings over the period of a meters lifetime.
+ 
+\end_layout
+
+\begin_layout Standard
+In analysing the H0 profile, which contains average consumption deltas of
+ residential customers in 15 minute intervals, it can be determined that
+ all values are in the interval of 
+\begin_inset Formula $[0.001;0.067]$
+\end_inset
+
+ kWh.
+ Since this profile is normalized to an annual consumption of 1000kWh, it
+ can be compared directly to the calculation above.
+ Even when taking huge deviations of the factor 100 or more into account,
+ the number of distinct values is still only a fraction of those possible
+ when saving counter readings.
+ Therefore, it can be assumed that the number of distinct values can be
+ reduced by 99.99% through the utilization of consumption deltas which thereby
+ get the prefered option with regard to main memory consumption.
+\end_layout
+
+\begin_layout Subsubsection
+Common Values
+\end_layout
+
+\begin_layout Standard
+Since the meter id and datetime column contain values wich are rather distribute
+d uniformly, the only column that could potentially benefit of common value
+ suppression techniques is the value column.
+ When taking the H0 profile as a basis, it turns out that some values indeed
+ occur ten times more often than others.
+ However, there is no single value which would qualify as universal most
+ common value.
+ Furthermore, it can be doubted that this phenomenon also becomes manifest
+ in real consumption data since the profile is normalized.
+ Accordingly, the common value suppression techniques prefix coding and
+ sparse coding aren't practicable for energy event data.
 \end_layout
 
 \begin_layout Subsubsection
