@@ -2039,7 +2039,31 @@ d uniformly, the only column that could potentially benefit of common value
 \end_layout
 
 \begin_layout Subsubsection
-Finding the Optimum Order
+Finding the Optimal Ordering
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+S_{\mathrm{total}}(n) & =S_{\mathrm{id}}(n)+S_{\mathrm{datetime}}(n)+S_{\mathrm{value}}(n)
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+S_{\mathrm{id}}(n) & =n\cdot35040\cdot\lceil\log_{2}(35040)\rceil\\
+S_{\mathrm{datetime}}(n) & =35040\cdot\lceil\log_{2}(35040)\rceil+35040\cdot\lceil\log_{2}(n\cdot35040)\rceil\\
+S_{\mathrm{value}}(n) & =n\cdot35040\cdot\lceil\log_{2}(100)\rceil
+\end{align}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
