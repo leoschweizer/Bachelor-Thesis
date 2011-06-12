@@ -67,6 +67,7 @@
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
+\listings_params "numberbychapter=false"
 \tracking_changes false
 \output_changes false
 \html_math_output 0
@@ -424,7 +425,7 @@ The data producer expects two main input parameters: An initial timestamp,
 status open
 
 \begin_layout Plain Layout
-German Energy and Water Association
+German Energy and Water Association, www.bdew.de
 \end_layout
 
 \end_inset
@@ -961,6 +962,87 @@ Acceleration of INSERT Statements
 [Verweis auf autocommit, merge, hosts, schemas]
 \end_layout
 
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize\sffamily},breaklines=true,captionpos=b,float,frame=single,language=SQL,showstringspaces=false,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+Table READINGS_PK
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+CREATE COLUMN TABLE readings (meterid INTEGER, datetime INTEGER, value INTEGER,
+ PRIMARY KEY (meterid, datetime))
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize\sffamily},breaklines=true,captionpos=b,float,frame=single,language=SQL,showstringspaces=false,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Table READINGS_IO_PK
+\end_layout
+
+\end_inset
+
+CREATE INSERT ONLY COLUMN TABLE readings (meterid INTEGER, datetime INTEGER,
+ value INTEGER, PRIMARY KEY (meterid, datetime))
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize\sffamily},breaklines=true,captionpos=b,float,frame=single,language=SQL,showstringspaces=false,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Table READINGS_IO
+\end_layout
+
+\end_inset
+
+CREATE INSERT ONLY COLUMN TABLE readings (meterid INTEGER, datetime INTEGER,
+ value INTEGER)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Prepared Statements
 \end_layout
@@ -1150,9 +1232,12 @@ The employed database system allows column tables without explicit primary
 \begin_layout Standard
 To evaluate the costs of explicit keys, batches of 100,000 readings have
  been inserted into the tables shown in listing 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "lis:TablesInsertOnly"
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+QV
+\end_layout
 
 \end_inset
 
@@ -1180,43 +1265,6 @@ reference "fig:Insert-Only"
  166ms, with a standard deviation of 16ms.
  That means that insert times could be reduced by approximately 73% through
  the omission of unnecessary keys.
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-lstparams "basicstyle={\footnotesize},breaklines=true,float,language=SQL,showstringspaces=false"
-inline false
-status open
-
-\begin_layout Plain Layout
-
-\begin_inset Caption
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "lis:TablesInsertOnly"
-
-\end_inset
-
-...
-\end_layout
-
-\end_inset
-
-CREATE INSERT ONLY COLUMN TABLE readings1 (smartmeterid INTEGER, datetime
- INTEGER, value INTEGER, PRIMARY KEY (smartmeterid, datetime))
-\end_layout
-
-\begin_layout Plain Layout
-
-CREATE INSERT ONLY COLUMN TABLE readings2 (smartmeterid INTEGER, datetime
- INTEGER, value INTEGER)
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -1317,9 +1365,12 @@ key "DBLP:conf/dasfaa/KrugerGTPZF10"
 
 \begin_layout Standard
 The second table shown in listing 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "lis:TablesInsertOnly"
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+QV
+\end_layout
 
 \end_inset
 
@@ -1403,6 +1454,12 @@ Compression
 \end_layout
 
 \begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Lightweight-Column-Compression"
+
+\end_inset
+
 Lightweight Column Compression Techniques
 \end_layout
 
@@ -1787,6 +1844,170 @@ d\cdot\lceil\log_{2}(d)\rceil+d\cdot\lceil\log_{2}(t)\rceil
 
 \begin_layout Subsection
 [Anwendung auf Energiedaten]
+\end_layout
+
+\begin_layout Standard
+With due regard to the available compression techniques outlined in sect.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Lightweight-Column-Compression"
+
+\end_inset
+
+, the process of minimizing the space requirements of smart-meter readings
+ comes down to three tasks.
+ First, the spreading of values has to be analyzed in order to evaluate
+ potential benefits of common value suppression techniques.
+ Secondly, the number of distinct values has to be reduced as far as possible
+ without losing relevant information in order to unfold the full potential
+ of dictionary compression.
+ And in the third place, the readings have to be sorted in such a way that
+ contiguous blocks of equal values which are as wide as possible occur.
+ As mentioned in sect.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Data-Producer"
+
+\end_inset
+
+, the assumed model of meter readings consists of the three columns meter
+ id, datetime and value.
+\end_layout
+
+\begin_layout Subsubsection
+Common Values
+\end_layout
+
+\begin_layout Subsubsection
+Reducing the Number of Distinct Values
+\end_layout
+
+\begin_layout Standard
+When investigating the necessary number of distinct values, the meter id
+ column can be ruled out quickly.
+ Obviously, there have to be exactly as many distinct ids as there are smart-met
+ers known to the system.
+ Furthermore, the specific characteristics aren't an issue due to dictionary
+ compression, so the natural implementation as integer in the interval 
+\begin_inset Formula $[1,n[$
+\end_inset
+
+ can be chosen, where 
+\begin_inset Formula $n$
+\end_inset
+
+ is the number of smart meters.
+\end_layout
+
+\begin_layout Standard
+The situation is different with the datetime column.
+ In a first approach, timestamps exact to the second have been used, yielding
+ 
+\begin_inset Formula $365\cdot24\cdot60\cdot60=31,536,000$
+\end_inset
+
+ distinct values per year.
+ But the necessity to save timestamps in such a high resolution is very
+ questionable.
+ The most relevant information for energy providers besides the consumption
+ value is if there is a meter reading for a given time slot or not, and
+ this information can be gained with far less accurate timestamps.
+ Even real time analysis scenarios like the calculation of the current consumpti
+on of all customers can be carried out without the need of timestamps exact
+ to the second.
+ In this specific example, it would be sufficient to build the sum of all
+ known timestamps of a given time slot.
+\end_layout
+
+\begin_layout Standard
+Hence, it is acceptable to reduce the resolution of the saved timestamps
+ to the one of the measurement interval.
+ This means that the timestamps can be rounded down to 15 minute intervals.
+ For example, 08:21:30 can be replaced by 08:15:00.
+ This strategy yields 
+\begin_inset Formula $365\cdot24\cdot4=35,040$
+\end_inset
+
+ distinct values per year, which is a saving of 99.9% compared to the inital
+ approach.
+ In the abstract, the required amount of space could be reduced by truncating
+ the timestamps.
+ Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Sample-readings"
+
+\end_inset
+
+ shows that at least the last two digits of a timestamp are always 
+\begin_inset Formula $00$
+\end_inset
+
+, so stripping them would be a reversible operation.
+ Through this procedure, 7 bits could be saved per timestamp.
+ However, this means savings of no more than roughly 30KB per year since
+ every value is saved in the dictionary only once, which isn't profitable.
+\end_layout
+
+\begin_layout Standard
+The consumption information in the value column can be saved in two ways.
+ One possibility is to save counter readings, that means every reading contains
+ the total amount of consumed energy since the installation of the meter.
+ The other possibility is to save consumption deltas.
+ If the counter readings of two subsequent time slots are 
+\begin_inset Formula $v_{t-1}$
+\end_inset
+
+ and 
+\begin_inset Formula $v_{t}$
+\end_inset
+
+, the value that would be saved for the time slot 
+\begin_inset Formula $t$
+\end_inset
+
+ would be 
+\begin_inset Formula $v_{t}-v_{t-1}$
+\end_inset
+
+ in the case of consumption deltas.
+ The two strategies are equivalent, as the sum of all deltas yields the
+ counter reading, and the deltas can be calculated by subtracting subsequent
+ counter readings.
+ The question remains which approach requires less distinct values.
+\end_layout
+
+\begin_layout Standard
+According to 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "eu/measurement"
+
+\end_inset
+
+, power meters are measuring kilowatt hours and are calibrated to three
+ decimal places (watt hours).
+ The consulting company Capgemini estimates a lifespan of eight years for
+ smart-metering devices 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "capgemini/analyse"
+
+\end_inset
+
+.
+ That means that average residential customers with a consumption of 3000kWh
+ per year would produce around 
+\begin_inset Formula $8\cdot3000\cdot1000=24,000,000$
+\end_inset
+
+ distinct counter readings over the period of a meters lifetime.
+\end_layout
+
+\begin_layout Subsubsection
+Finding the Optimum Order
 \end_layout
 
 \begin_layout Subsection
