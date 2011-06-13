@@ -2542,17 +2542,21 @@ S_{\mathrm{value}}(n)=35040\cdot1000\cdot\lceil\log_{2}(1000)\rceil+35040\cdot10
 \end_layout
 
 \begin_layout Standard
-which is still better than domain coding alone.
+which is still better than domain coding alone for 
+\begin_inset Formula $n>3700$
+\end_inset
+
+.
  The total amount of required memory thus can be estimated by
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{align*}
+\begin{align}
 S_{\mathrm{total}}(n) & =n\cdot35040\cdot\lceil\log_{2}(n)\rceil+\\
- & +35040\cdot\lceil\log_{2}(35040)\rceil+35040\cdot\lceil\log_{2}(n\cdot35040)\rceil+\\
- & +35040\cdot1000\cdot\lceil\log_{2}(1000)\rceil+35040\cdot1000\cdot\lceil\log_{2}(n\cdot35040)\rceil
-\end{align*}
+ & +35040\cdot\lceil\log_{2}(35040)\rceil+35040\cdot\lceil\log_{2}(n\cdot35040)\rceil+\nonumber \\
+ & +35040\cdot1000\cdot\lceil\log_{2}(1000)\rceil+35040\cdot1000\cdot\lceil\log_{2}(n\cdot35040)\rceil\nonumber 
+\end{align}
 
 \end_inset
 
