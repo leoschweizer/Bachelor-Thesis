@@ -2098,14 +2098,14 @@ which returns the minimum required number of bits for the chosen compression
 
 \begin_layout Standard
 First of all, domain coding (cf.
- formula 
+ (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:domain-coding"
 
 \end_inset
 
-) is applied to all columns.
+)) is applied to all columns.
  That means that there is a base compression on all columns which equals
 \end_layout
 
@@ -2113,7 +2113,7 @@ reference "eq:domain-coding"
 \begin_inset Formula 
 \begin{align}
 S_{\mathrm{id}}(n) & =n\cdot35040\cdot\lceil\log_{2}(n)\rceil\\
-S_{\mathrm{datetime}}(n) & =n\cdot35040\cdot\lceil\log_{2}(35040)\rceil\\
+S_{\mathrm{datetime}}(n) & =n\cdot35040\cdot\lceil\log_{2}(35040)\rceil\label{eq:space-datetime-1}\\
 S_{\mathrm{value}}(n) & =n\cdot35040\cdot\lceil\log_{2}(1000)\rceil
 \end{align}
 
@@ -2123,8 +2123,8 @@ S_{\mathrm{value}}(n) & =n\cdot35040\cdot\lceil\log_{2}(1000)\rceil
 \end_layout
 
 \begin_layout Standard
-However, the compression rate can be increased drastically by sorting and
- subsequent run length encoding.
+Nevertheless, the compression rate can be increased drastically by sorting
+ and subsequent run length encoding.
  In the abstract, all three columns qualify for a primary sorting.
  The goal is to form as few continuous blocks as possible.
  Sorting the table by the meter id yields 
@@ -2143,65 +2143,14 @@ However, the compression rate can be increased drastically by sorting and
 \end_inset
 
  when sorting the table by the value column.
- Since sorting by the value column also doesn't constrain second and third
- level sorting, it is the optimal primary sorting as long as the number
- of distinct values doesn't exceed the number of smart meters which are
- stored in the database.
- So in this scenario, the break-even point is at 
-\begin_inset Formula $n=1000$
-\end_inset
-
-.
- The memory footprint of the value column then yields
+ Hence, as run length encoding gets more and more inefficient when the number
+ of blocks increases, the value column is theoretically best suited for
+ a run length encoding.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-S_{\mathrm{value}}(n) & =1000\cdot\lceil\log_{2}(1000)\rceil+1000\cdot\lceil\log_{2}(n\cdot35040)\rceil
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-bits.
- However, since new rows are inserted into the table sorted by the datetime
- column, such a sorting might cause expensive recompressions during the
- merge process.
- The impact is evaluated in Sect.
- 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sub:Impact-on-Insert"
-
-\end_inset
-
-.
- When sorting the table by datetime, the memory footprint of this column
- could be reduced to
-\begin_inset Formula 
-\begin{align}
-S_{\mathrm{datetime}}(n) & =35040\cdot\lceil\log_{2}(35040)\rceil+35040\cdot\lceil\log_{2}(n\cdot35040)\rceil
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-bits.
- Sorting by datetime is the second best option as long as the number of
- smart meters is greater than 35040.
-\end_layout
-
-\begin_layout Standard
-Theoretically, one would also have to take into consideration that the domain
- coded datetime column requires more space than the domain coded value column,
- since 
+However, one has to take into consideration that the domain coded datetime
+ column requires more space than the domain coded value column, since 
 \begin_inset Formula $\lceil\log_{2}(35040)\rceil>\lceil\log_{2}(1000)\rceil$
 \end_inset
 
@@ -2211,20 +2160,34 @@ Theoretically, one would also have to take into consideration that the domain
 \end_inset
 
  more bits.
- However, the break-even point is at 
-\begin_inset Formula $n\approx100000$
+ This also applies to the meter id column for 
+\begin_inset Formula $n>1000$
 \end_inset
 
 .
- Since run length encoding gets more and more inefficient with the number
- of blocks, the same is true when regarding the meter id column.
- The break-even point can be calculated by solving the inequation
+ To solve the question if there are break-even points, the following auxiliary
+ functions are used, where 
+\begin_inset Formula $\mathrm{D}(n)$
+\end_inset
+
+ denotes the memory footprint of a domain coded column and 
+\begin_inset Formula $\mathrm{RLE}(n)$
+\end_inset
+
+ the one of a run length encoded column for 
+\begin_inset Formula $n$
+\end_inset
+
+ smart meters:
 \begin_inset Formula 
-\[
-\begin{aligned} & n\cdot\lceil\log_{2}(n)\rceil+n\cdot\lceil\log_{2}(n\cdot35040)\rceil+n\cdot35040\cdot\lceil\log_{2}(1000)\rceil\geq\\
- & 1000\cdot\lceil\log_{2}(n\cdot35040)\rceil+n\cdot35040\cdot\lceil\log_{2}(n)\rceil
-\end{aligned}
-\]
+\begin{align}
+\mathrm{D}_{\mathrm{id}}(n) & =n\cdot35040\cdot\lceil\log_{2}(n)\rceil\\
+\mathrm{RLE}_{\mathrm{id}}(n) & =n\cdot\lceil\log_{2}(n)\rceil+n\cdot\lceil\log_{2}(n\cdot35040)\rceil\\
+\mathrm{D}_{\mathrm{datetime}}(n) & =n\cdot35040\cdot\lceil\log_{2}(35040)\rceil\\
+\mathrm{RLE_{datetime}(n)} & =35040\cdot\lceil\log_{2}(35040)\rceil+35040\cdot\lceil\log_{2}(n\cdot35040)\rceil\\
+\mathrm{D_{value}(n)} & =n\cdot35040\cdot\lceil\log_{2}(1000)\rceil\\
+\mathrm{RLE_{value}(n)} & =1000\cdot\lceil\log_{2}(1000)\rceil+1000\cdot\lceil\log_{2}(n\cdot35040)\rceil
+\end{align}
 
 \end_inset
 
@@ -2232,14 +2195,377 @@ Theoretically, one would also have to take into consideration that the domain
 \end_layout
 
 \begin_layout Standard
-which is true for 
-\begin_inset Formula $n>1000$
+The question is if there is a solution to the following inequation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\mathrm{RLE_{value}}(n)+\mathrm{D_{datetime}}(n)\leq\mathrm{D_{value}}(n)+\mathrm{RLE_{datetime}}(n)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It turns out that the inequation is only true for 
+\begin_inset Formula $n\in[0,5]$
+\end_inset
+
+.
+ For 
+\begin_inset Formula $n>5$
+\end_inset
+
+, sorting the table by the datetime column has to be prefered.
+ The same problem applies to the comparison of the meter id and datetime
+ column.
+ Again, the question is which solution is true for
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\mathrm{RLE_{datetime}}(n)+\mathrm{D_{id}}(n)\leq\mathrm{D_{datetime}}(n)+\mathrm{RLE_{id}}(n)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This time, there is a break-even point at 
+\begin_inset Formula $n=35040$
+\end_inset
+
+, or in other words the inequation is true for 
+\begin_inset Formula $n\in[35040,\infty[$
+\end_inset
+
+.
+ Hence, sorting by the datetime column is preferable as soon as more than
+ 35040 smart meters are in the database.
+ Thus, function (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:space-datetime-1"
+
+\end_inset
+
+) can be replaced by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+S_{\mathrm{datetime}}(n)=35040\cdot\lceil\log_{2}(35040)\rceil+35040\cdot\lceil\log_{2}(n\cdot35040)\rceil
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now that the primary sorting of the table is by datetime, no more compression
+ techniques can be applied to the meter id column, since the number of distinct
+ ids per datetime block equals the length of this block.
+ However, this doesn't apply to the value column, which could be sorted
+ within the constraints of the primary sorting.
+ Since there is a correlation between date and time and energy consumption,
+ it can even be assumed that certain values accumulate at a specific date
+ and time, which would qualify the column for a further run length encoding.
+ Since the column contains relatively few distinct values, applying an indirect
+ coding and not sorting the column is conceivable as an alternative, too.
+ As both scenarios can no longer be mapped reasonably as a function of the
+ number of smart meters, the efficiency of both approaches has been evaluated
+ experimentally.
+\end_layout
+
+\begin_layout Standard
+In order to analyze the impact of both techniques, 10,000 profiles which
+ conform to the conditions outlined in Sect.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Estimation-of-Consumption"
+
+\end_inset
+
+ have been inserted into the tables shown in listings 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:Table-READINGS_RLE"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:Table-READINGS_INDIRECT"
+
+\end_inset
+
+.
+ The result is depicted in table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:RLE-vs-INDIRECT"
+
+\end_inset
+
+.
+ With 1,912KB compared to 187,101KB, the run length encoded column is almost
+ 100 times smaller than the one compressed with indirect coding.
+ Consequently, the former is the prefered option for further compressing
+ the table.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:RLE-vs-INDIRECT"
+
+\end_inset
+
+Compression rates and memory consumption of the value column with run length
+ encoding and indirect coding
+\end_layout
+
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="3">
+<features tabularvalignment="middle" tabularwidth="80col%">
+<column alignment="left" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0pt">
+<row topspace="default" bottomspace="default">
+<cell alignment="left" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Table
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Compression Rate
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Consumption [KB]
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default">
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+READINGS_RLE
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+99.9%
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1,912
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default">
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+READINGS_INDIRECT
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+86.3%
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+187,101
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize\sffamily},breaklines=true,captionpos=b,float,frame=single,language=SQL,showstringspaces=false,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:Table-READINGS_RLE"
+
+\end_inset
+
+Table READINGS_RLE
+\end_layout
+
+\end_inset
+
+CREATE INSERT ONLY COLUMN TABLE readings (meterid INTEGER, datetime INTEGER,
+ value INTEGER) WITH PARAMETERS ('COMPRESSION' = ('DATETIME', 'RLE'), 'COMPRESSI
+ON' = ('VALUE', 'RLE'))
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize\sffamily},breaklines=true,captionpos=b,float,frame=single,language=SQL,showstringspaces=false,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:Table-READINGS_INDIRECT"
+
+\end_inset
+
+Table READINGS_INDIRECT
+\end_layout
+
+\end_inset
+
+CREATE INSERT ONLY COLUMN TABLE readings (meterid INTEGER, datetime INTEGER,
+ value INTEGER) WITH PARAMETERS ('COMPRESSION' = ('DATETIME', 'RLE'), 'COMPRESSI
+ON' = ('VALUE', 'INDIRECT'))
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the worst case, the memory footprint of the value column hence can be
+ calculated by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+S_{\mathrm{value}}(n)=35040\cdot1000\cdot\lceil\log_{2}(1000)\rceil+35040\cdot1000\cdot\lceil\log_{2}(n\cdot35040)\rceil
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+which is still better than domain coding alone.
+ The total amount of required memory thus can be estimated by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+S_{\mathrm{total}}(n) & =n\cdot35040\cdot\lceil\log_{2}(n)\rceil+\\
+ & +35040\cdot\lceil\log_{2}(35040)\rceil+35040\cdot\lceil\log_{2}(n\cdot35040)\rceil+\\
+ & +35040\cdot1000\cdot\lceil\log_{2}(1000)\rceil+35040\cdot1000\cdot\lceil\log_{2}(n\cdot35040)\rceil
+\end{align*}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Estimation-of-Consumption"
+
+\end_inset
+
 Estimation of Main Memory Consumption
 \end_layout
 
