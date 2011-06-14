@@ -1069,11 +1069,11 @@ reference "fig:naive-insert"
  compares the performance of the usage of standard and prepared statements.
  First, 100,000 readings have been inserted into an empty instance of [reference
 ] by generating a new statement for each reading.
- After 10 runs, the total insert time averages 3 minutes 25.540 seconds (standard
- deviation: 1.162 seconds).
+ After 10 runs, the total insert time averages 3 minutes 38.530 seconds (standard
+ deviation: 3.281 seconds).
  When repeating the measurement using a prepared statement, the average
- insert time gets reduced to 39.451 seconds (standard deviation: 310ms),
- which is equivalent to a speed-up of over 80%.
+ insert time gets reduced to 51.974 seconds (standard deviation: 365ms),
+ which is equivalent to a speed-up of almost 80%.
 \end_layout
 
 \begin_layout Standard
@@ -1148,8 +1148,8 @@ key "msdn/arrayBinding"
 
 \begin_layout Standard
 In contrast to the execution of 100,000 prepared, but discrete inserts (average:
- 39.451 seconds, standard deviation: 310ms), the insert time can be further
- reduced 
+ 51.974 seconds, standard deviation: 365ms), the insert time can be further
+ reduced ...
 \end_layout
 
 \begin_layout Standard
@@ -1265,8 +1265,18 @@ reference "fig:Insert-Only"
 \end_inset
 
 .
- Insertion into an insert-only table with explicit primary key take an average
- of 612ms, with a standard deviation of 32ms.
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Vergleich mit PK Table
+\end_layout
+
+\end_inset
+
+ Insertion into an insert-only table with explicit primary key takes an
+ average of 612ms, with a standard deviation of 32ms.
  In contrast, insertions into a table without any explicit keys average
  166ms, with a standard deviation of 16ms.
  That means that insert times could be reduced by approximately 73% through
@@ -3582,6 +3592,17 @@ Total
 
 
 \end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+S_{\mathrm{csv}}(n)=n\cdot35040\cdot14\cdot{\displaystyle \sum_{k=1}^{\log_{10}(n)}}10^{k}\cdot35040\cdot k
+\]
 
 \end_inset
 
