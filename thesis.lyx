@@ -2099,7 +2099,7 @@ S_{\mathrm{total}}(n) & =S_{\mathrm{id}}(n)+S_{\mathrm{datetime}}(n)+S_{\mathrm{
 \begin_layout Standard
 which returns the minimum required number of bits for the chosen compression
  techniques.
- Thereby, the value column is assumed to contain at most 1000 distinct values.
+ Thereby, the value column is assumed to contain at most 100 distinct values.
 \end_layout
 
 \begin_layout Standard
@@ -2120,7 +2120,7 @@ reference "eq:domain-coding"
 \begin{align}
 S_{\mathrm{id}}(n) & =n\cdot35040\cdot\lceil\log_{2}(n)\rceil\\
 S_{\mathrm{datetime}}(n) & =n\cdot35040\cdot\lceil\log_{2}(35040)\rceil\label{eq:space-datetime-1}\\
-S_{\mathrm{value}}(n) & =n\cdot35040\cdot\lceil\log_{2}(1000)\rceil
+S_{\mathrm{value}}(n) & =n\cdot35040\cdot\lceil\log_{2}(100)\rceil
 \end{align}
 
 \end_inset
@@ -2144,8 +2144,8 @@ Nevertheless, the compression rate can be increased drastically by sorting
 \end_inset
 
 .
- In comparison, there are only 1000 blocks with an average length of 
-\begin_inset Formula $\frac{1000}{n\cdot35040}$
+ In comparison, there are only 100 blocks with an average length of 
+\begin_inset Formula $\frac{n\cdot35040}{100}$
 \end_inset
 
  when sorting the table by the value column.
@@ -2157,17 +2157,17 @@ Nevertheless, the compression rate can be increased drastically by sorting
 \begin_layout Standard
 However, one has to take into consideration that the domain coded datetime
  column requires more space than the domain coded value column, since 
-\begin_inset Formula $\lceil\log_{2}(35040)\rceil>\lceil\log_{2}(1000)\rceil$
+\begin_inset Formula $\lceil\log_{2}(35040)\rceil>\lceil\log_{2}(100)\rceil$
 \end_inset
 
 .
  In other words, the datetime column consumes 
-\begin_inset Formula $6\cdot n$
+\begin_inset Formula $9\cdot n$
 \end_inset
 
  more bits.
  This also applies to the meter id column for 
-\begin_inset Formula $n>1000$
+\begin_inset Formula $n>100$
 \end_inset
 
 .
@@ -2191,8 +2191,8 @@ However, one has to take into consideration that the domain coded datetime
 \mathrm{RLE}_{\mathrm{id}}(n) & =n\cdot\lceil\log_{2}(n)\rceil+n\cdot\lceil\log_{2}(n\cdot35040)\rceil\\
 \mathrm{D}_{\mathrm{datetime}}(n) & =n\cdot35040\cdot\lceil\log_{2}(35040)\rceil\\
 \mathrm{RLE_{datetime}(n)} & =35040\cdot\lceil\log_{2}(35040)\rceil+35040\cdot\lceil\log_{2}(n\cdot35040)\rceil\\
-\mathrm{D_{value}(n)} & =n\cdot35040\cdot\lceil\log_{2}(1000)\rceil\\
-\mathrm{RLE_{value}(n)} & =1000\cdot\lceil\log_{2}(1000)\rceil+1000\cdot\lceil\log_{2}(n\cdot35040)\rceil
+\mathrm{D_{value}(n)} & =n\cdot35040\cdot\lceil\log_{2}(100)\rceil\\
+\mathrm{RLE_{value}(n)} & =100\cdot\lceil\log_{2}(100)\rceil+100\cdot\lceil\log_{2}(n\cdot35040)\rceil
 \end{align}
 
 \end_inset
@@ -2217,12 +2217,12 @@ The question is if there is a solution to the following inequation:
 
 \begin_layout Standard
 It turns out that the inequation is only true for 
-\begin_inset Formula $n\in[0,5]$
+\begin_inset Formula $n\in[0,128]$
 \end_inset
 
 .
  For 
-\begin_inset Formula $n>5$
+\begin_inset Formula $n>128$
 \end_inset
 
 , sorting the table by the datetime column has to be prefered.
@@ -2539,7 +2539,7 @@ In the worst case, the memory footprint of the value column hence can be
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-S_{\mathrm{value}}(n)=35040\cdot1000\cdot\lceil\log_{2}(1000)\rceil+35040\cdot1000\cdot\lceil\log_{2}(n\cdot35040)\rceil
+S_{\mathrm{value}}(n)=35040\cdot100\cdot\lceil\log_{2}(100)\rceil+35040\cdot100\cdot\lceil\log_{2}(n\cdot35040)\rceil
 \end{equation}
 
 \end_inset
@@ -2549,7 +2549,7 @@ S_{\mathrm{value}}(n)=35040\cdot1000\cdot\lceil\log_{2}(1000)\rceil+35040\cdot10
 
 \begin_layout Standard
 which is still better than domain coding alone for 
-\begin_inset Formula $n>3700$
+\begin_inset Formula $n>442$
 \end_inset
 
 .
@@ -2561,7 +2561,7 @@ which is still better than domain coding alone for
 \begin{align}
 S_{\mathrm{total}}(n) & =n\cdot35040\cdot\lceil\log_{2}(n)\rceil+\\
  & +35040\cdot\lceil\log_{2}(35040)\rceil+35040\cdot\lceil\log_{2}(n\cdot35040)\rceil+\nonumber \\
- & +35040\cdot1000\cdot\lceil\log_{2}(1000)\rceil+35040\cdot1000\cdot\lceil\log_{2}(n\cdot35040)\rceil\nonumber 
+ & +35040\cdot100\cdot\lceil\log_{2}(100)\rceil+35040\cdot100\cdot\lceil\log_{2}(n\cdot35040)\rceil\nonumber 
 \end{align}
 
 \end_inset
@@ -2655,7 +2655,7 @@ Memory footprint of table READINGS_IO for a number of smart meters
 \begin_inset Formula $n$
 \end_inset
 
-, broken down by column, in MB
+, broken down by column, in [MB]
 \end_layout
 
 \end_inset
@@ -3131,7 +3131,7 @@ Memory footprint of table READINGS_RLE for a number of smart meters
 \begin_inset Formula $n$
 \end_inset
 
-, broken down by column, in MB
+, broken down by column, in [MB]
 \end_layout
 
 \end_inset
@@ -3602,8 +3602,8 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Comparison of space requirements of compressed and uncompressed in-memory
- column tables and storage on hard disks
+Estimated space requirements of profiles containing one year of meter readings,
+ on disk and in-memory
 \end_layout
 
 \end_inset
@@ -3675,7 +3675,7 @@ Compressed
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $6301.53$
+\begin_inset Formula $6302\mathrm{MB}$
 \end_inset
 
 
@@ -3687,7 +3687,7 @@ Compressed
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $2836.53$
+\begin_inset Formula $2837\mathrm{MB}$
 \end_inset
 
 
@@ -3699,7 +3699,7 @@ Compressed
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $1840.15$
+\begin_inset Formula $1840\mathrm{MB}$
 \end_inset
 
 
@@ -3734,6 +3734,9 @@ Compressed
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\approx30\mathrm{GB}$
+\end_inset
+
 
 \end_layout
 
@@ -3743,6 +3746,9 @@ Compressed
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\approx20\mathrm{GB}$
+\end_inset
+
 
 \end_layout
 
@@ -3775,6 +3781,9 @@ Compressed
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\approx345\mathrm{GB}$
+\end_inset
+
 
 \end_layout
 
@@ -3784,6 +3793,9 @@ Compressed
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\approx230\mathrm{GB}$
+\end_inset
+
 
 \end_layout
 
@@ -3816,6 +3828,9 @@ Compressed
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\approx3.8\mathrm{TB}$
+\end_inset
+
 
 \end_layout
 
@@ -3825,6 +3840,9 @@ Compressed
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\approx2.5\mathrm{TB}$
+\end_inset
+
 
 \end_layout
 
