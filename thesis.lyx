@@ -1423,10 +1423,6 @@ sideways false
 status open
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
 \align center
 \begin_inset Graphics
 	filename plots/logging.eps
@@ -3601,7 +3597,7 @@ Total
 \begin_layout Standard
 \begin_inset Formula 
 \[
-S_{\mathrm{csv}}(n)=n\cdot35040\cdot14\cdot{\displaystyle \sum_{k=1}^{\log_{10}(n)}}10^{k}\cdot35040\cdot k
+S_{\mathrm{csv}}(n)=n\cdot35040\cdot15\cdot{\displaystyle \sum_{k=2}^{n+1}}\lceil\log_{10}(k)\rceil\cdot35040
 \]
 
 \end_inset
@@ -3614,10 +3610,6 @@ S_{\mathrm{csv}}(n)=n\cdot35040\cdot14\cdot{\displaystyle \sum_{k=1}^{\log_{10}(
 wide false
 sideways false
 status open
-
-\begin_layout Plain Layout
-
-\end_layout
 
 \begin_layout Plain Layout
 \begin_inset Caption
@@ -3696,7 +3688,7 @@ Compressed
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $6302\mathrm{MB}$
+\begin_inset Formula $\approx6.2\mathrm{GB}$
 \end_inset
 
 
@@ -3708,7 +3700,7 @@ Compressed
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $2837\mathrm{MB}$
+\begin_inset Formula $\approx2.8\mathrm{GB}$
 \end_inset
 
 
@@ -3720,7 +3712,7 @@ Compressed
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $1840\mathrm{MB}$
+\begin_inset Formula $\approx1.8\mathrm{GB}$
 \end_inset
 
 
@@ -3746,6 +3738,9 @@ Compressed
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\approx65\mathrm{GB}$
+\end_inset
+
 
 \end_layout
 
@@ -3793,6 +3788,9 @@ Compressed
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\approx682\mathrm{GB}$
+\end_inset
+
 
 \end_layout
 
@@ -3840,6 +3838,9 @@ Compressed
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\approx7.0\mathrm{TB}$
+\end_inset
+
 
 \end_layout
 
@@ -3874,10 +3875,6 @@ Compressed
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
