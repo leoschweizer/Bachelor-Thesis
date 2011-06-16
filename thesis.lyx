@@ -267,31 +267,12 @@ In avoidance of unfavorable and advantageous effects of random data, for
  instance on compression rates, and with regard to data analysis and visualizati
 on tests, the generated readings should be based on real power consumption
  data.
- Furthermore, the simulation should be aware of single customers.
- That means that for a given customer id, reading events should occur in
- 15 minute intervals approximately.
- Besides, the unity of all readings of any simulated customer should form
- a realistic consumption behaviour over extended periods of time, e.g.
+ Furthermore, the simulation should be aware of single smart meters.
+ That means that for a given meter id, reading events should occur in 15
+ minute intervals approximately.
+ Besides, the unity of all readings of any simulated smart meter should
+ form a realistic consumption behaviour over extended periods of time, e.g.
  days, weeks, months and years.
- 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Bisher keine Rede von 
-\begin_inset Quotes eld
-\end_inset
-
-customern
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Subsection
@@ -438,13 +419,10 @@ German Energy and Water Association, www.bdew.de
  They consist of counter readings or consumption deltas in 15 minute intervals,
  yielding 35040 values for non-leapyears.
  For reasons depicted in Sect.
- 4.3
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Querverweis!
-\end_layout
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Compression-of-Energy"
 
 \end_inset
 
@@ -473,13 +451,10 @@ Based on these two input parameters, readings are generated.
  Furthermore, the timestamp of the generated reading is rounded down to
  15 minute intervals.
  For instance, 13:14:55 would be replaced by 13:00:00 (cf.
- 4.3
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Querverweis!
-\end_layout
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Compression-of-Energy"
 
 \end_inset
 
@@ -489,8 +464,10 @@ Querverweis!
 \begin_layout Standard
 The third and last component of a reading is the unique integer device id
  by which every simulated smart meter can be identified.
- In our scenario, this device id is equivalent to a customer id, since relocatio
-ns and the like aren't relevant for us.
+ Each smart meter is associated with one customer, and each customer can
+ have an arbitrary number of smart meters.
+ However, this mapping information is not part of the table containing the
+ meter readings.
 \end_layout
 
 \begin_layout Standard
@@ -904,17 +881,14 @@ It accepts TCP/IP connections from an arbitrary number of concentrators
  as much as possible in order to reduce the overall load of the database
  and to enable the simultaneous processing of analytical requests are presented
  in Sect.
- 3.
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Querverweis!
-\end_layout
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Acceleration-of-INSERT"
 
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout Standard
@@ -956,6 +930,12 @@ Jeweils mit unterschiedlichen Batchsizes
 \end_layout
 
 \begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Acceleration-of-INSERT"
+
+\end_inset
+
 Acceleration of INSERT Statements
 \end_layout
 
@@ -1645,6 +1625,7 @@ key "conf/btw/LemkeSF09,HPI/PlattnerZ/nHdai,Lemke:2010:SUQ:1881923.1881936"
  A bit vector is generated for the column, indicating whether the value
  corresponding to the element at the given index equals the sparse value
  or not.
+ In addition, a prefix coding is applied to this bit vector.
  Thus, sparse compression reduces the size of a column with 
 \begin_inset Formula $s$
 \end_inset
@@ -1655,7 +1636,7 @@ key "conf/btw/LemkeSF09,HPI/PlattnerZ/nHdai,Lemke:2010:SUQ:1881923.1881936"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-(t-s)\cdot\lceil\log_{2}(d)\rceil+t+32
+(t-s)\cdot\lceil\log_{2}(d)\rceil+(t-p)+32
 \end{equation}
 
 \end_inset
@@ -1665,18 +1646,6 @@ key "conf/btw/LemkeSF09,HPI/PlattnerZ/nHdai,Lemke:2010:SUQ:1881923.1881936"
 
 \begin_layout Standard
 bits.
- In addition, a prefix coding could be applied to the bit vector.
- 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Abweichung vom zitierten Paper!
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -1894,7 +1863,13 @@ d\cdot\lceil\log_{2}(d)\rceil+d\cdot\lceil\log_{2}(t)\rceil
 \end_layout
 
 \begin_layout Subsection
-[Anwendung auf Energiedaten]
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Compression-of-Energy"
+
+\end_inset
+
+Compression of Energy Event Data
 \end_layout
 
 \begin_layout Standard
@@ -3969,6 +3944,421 @@ Impact on Insert Performance
 
 \begin_layout Section
 Conclusion
+\end_layout
+
+\begin_layout Itemize
+Insert-Rate prinzipiell machbar
+\end_layout
+
+\begin_layout Itemize
+Tradeoff RowID - Insert-Performance
+\end_layout
+
+\begin_layout Itemize
+Ausstehend: Compression
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Appendix
+\end_layout
+
+\begin_layout Subsection*
+Benchmark Environment
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="11" columns="3">
+<features tabularvalignment="middle" tabularwidth="100col%">
+<column alignment="left" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0pt">
+<row topspace="2mm" bottomspace="2mm">
+<cell alignment="left" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\size scriptsize
+Host HPA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\size scriptsize
+Host HPB
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="2mm" bottomspace="default">
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+CPU
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+2x Intel Xeon X5670 @ 2.93GHz
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+4x Intel Xeon X7560 @ 2.27GHz
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default">
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+Main Memory
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+144GB @ 800MHz
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+256GB @ 1333MHz
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default">
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+Operating System
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+openSUSE 11.2 2.6.31.14-0.8-desktop (x64)
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="2mm">
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+Network Connectivity
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+82575EB Gigabit LAN
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+NX3031 10-Gigabit LAN
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="2mm">
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="2mm" bottomspace="2mm">
+<cell alignment="left" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\size scriptsize
+Host HPC
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="2mm" bottomspace="default">
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+CPU
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+Intel Core i5 750 @ 2.67GHz
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default">
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+Main Memory
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+8GB @ 1333MHz
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default">
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+Operating System
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+openSUSE 11.3 2.6.34.8-0.2-desktop (x64)
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="default">
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+Network Connectivity
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+82578DM Gigabit LAN
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
