@@ -137,37 +137,59 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-Not only the power market of Germany, but also those of other European countries
- are undergoing radical changes these days.
+Traditionally, database management systems are split into two categories
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "journals/dbsk/KrugerGTEZP10"
+
+\end_inset
+
+.
+ On the one hand, there are write-optimized, row oriented Online Transactional
+ Processing (OLTP) systems, which in return lack analytical performance.
+ On the other hand, there are read-optimized Online Analytical Processing
+ (OLAP) systems, which aren't suitable for transactional processing.
+ However, with the introduction of in-memory databases, the promise has
+ been made that this separation becomes superfluous, in particular with
+ the help of column oriented tables 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "conf/sigmod/Plattner09"
+
+\end_inset
+
+ - a technique that was originally introduced as highly read-optimized approach
+ by Stonebreaker et.
+ al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Stonebraker:2005:CCD:1083592.1083658"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-On the one hand, the growing importance of renewable and distributed energy
- sources like wind and solar energy as part of the aimed-at energy turnaround
- leads to an increased need of information.
- Despite their unpredictable nature, utility companies will depend on detailed
- insight into [large concentrated power plants, ATP]
+This raises the question to which extent in-memory databases can solve the
+ problems utility companies and energy providers throughout Europe will
+ have to face in the near future.
+ The growing importance of renewable and distributed energy sources like
+ wind and solar energy as part of the aimed at energy turnaround leads to
+ an increased need of information.
+ 
 \end_layout
 
 \begin_layout Standard
-On the other hand, the deregulation of markets forces suppliers of electric
- energy to offer competitive contract conditions and new tariff models to
- their customers.
- Amongst others, possibilities include contracts with very low or even no
- terms, encouraging the consumers to change their providers more frequently.
- On top of that, [RTP, TOUB]
+At the same time, suppliers of electric energy are forced to offer new contract
+ conditions and tariff models to their customers.
 \end_layout
 
 \begin_layout Standard
-[Daten von Smart Metern, Energieerzeugern]
-\end_layout
-
-\begin_layout Standard
-[Herausforderungen: Verarbeitung, Speicherung, Analyse]
-\end_layout
-
-\begin_layout Standard
-[Bogen schlagen zu In Memory, column stores]
+While smart grid / smart meter [liefern daten], blabla...
+ [kein System] enable involved parties [real-time informationsgewinnung].
 \end_layout
 
 \begin_layout Section
@@ -892,9 +914,20 @@ reference "sec:Acceleration-of-INSERT"
 \end_layout
 
 \begin_layout Standard
-Due to performance advantages of ODBC over JDBC, inserts are processed via
- the former, so this component of the simulation is implemented in C++ as
- native executable.
+Since the database client is intended for running on the same host as the
+ database system, it is important to reduce the footprint of the client
+ as far as possible.
+ For that reason, the client is implemented as C++ native executable and
+ connected to the database via ODBC.
+ The C++ implementation reduces the main memory consumption from 
+\begin_inset Formula $\approx2\mathrm{GB}$
+\end_inset
+
+ to 
+\begin_inset Formula $<100\mathrm{MB}$
+\end_inset
+
+ compared to the analog Java implementation.
 \end_layout
 
 \begin_layout Subsection
@@ -926,7 +959,7 @@ Inserzeit für Batches
 \end_layout
 
 \begin_layout Itemize
-Jeweils mit unterschiedlichen Batchsizes
+Merge-Problematik
 \end_layout
 
 \begin_layout Section
@@ -940,7 +973,54 @@ Acceleration of INSERT Statements
 \end_layout
 
 \begin_layout Standard
-[Verweis auf autocommit, merge, hosts, schemas]
+In order to support a constant data stream originating from as many smart
+ meters as possible, it is important to reduce the execution time of INSERT-stat
+ements to the greatest possible extent.
+ The measures that have been taken into consideration for that reason are
+ depicted and evaluated in this section.
+\end_layout
+
+\begin_layout Standard
+Unless stated otherwise, all measurements in this section have been made
+ under the following conditions: The database client is running on host
+ HPC and connecting to a NewDB instance on host HPA via JDBC.
+ The hosts are connected via Gigabit LAN.
+ The execution of INSERT-statements takes place on empty tables, whereas
+ each table is generated before and droped after each test run.
+ Autocommit is disabled as well as automerge and merge times are not included
+ in the measurements.
+ Transactional logging isn't in effect during inserts.
+ Time measurements are taken with the help of the Java getTimeInMillis()-API.
+\end_layout
+
+\begin_layout Standard
+Three different schemas have been used for the measurements.
+ The schema READINGS_PK (listing 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:Schema-READINGS_PK"
+
+\end_inset
+
+) constitutes a regular column table with a natural primary key on the columns
+ meterid and datetime.
+ The schema READINGS_IO_PK (listing 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:Schema-READINGS_IO_PK"
+
+\end_inset
+
+) is equivalent to READINGS_PK, except that it represents an insert-only
+ column table.
+ The third schema is READINGS_IO (listing 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:Schema-READINGS_IO"
+
+\end_inset
+
+), which is an insert-only column table with omitted explicit primary key.
 \end_layout
 
 \begin_layout Standard
@@ -954,7 +1034,13 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Table READINGS_PK
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:Schema-READINGS_PK"
+
+\end_inset
+
+Schema READINGS_PK
 \end_layout
 
 \end_inset
@@ -984,7 +1070,13 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Table READINGS_IO_PK
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:Schema-READINGS_IO_PK"
+
+\end_inset
+
+Schema READINGS_IO_PK
 \end_layout
 
 \end_inset
@@ -1009,7 +1101,13 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Table READINGS_IO
+\begin_inset CommandInset label
+LatexCommand label
+name "lis:Schema-READINGS_IO"
+
+\end_inset
+
+Schema READINGS_IO
 \end_layout
 
 \end_inset
@@ -1024,6 +1122,12 @@ CREATE INSERT ONLY COLUMN TABLE readings (meterid INTEGER, datetime INTEGER,
 \end_layout
 
 \begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Prepared-Statements"
+
+\end_inset
+
 Prepared Statements
 \end_layout
 
@@ -1047,8 +1151,8 @@ reference "fig:naive-insert"
 \end_inset
 
  compares the performance of the usage of standard and prepared statements.
- First, 100,000 readings have been inserted into an empty instance of [reference
-] by generating a new statement for each reading.
+ First, 100,000 readings have been inserted into an empty instance of READINGS_P
+K by generating a new statement for each reading.
  After 10 runs, the total insert time averages 3 minutes 38.530 seconds (standard
  deviation: 3.281 seconds).
  When repeating the measurement using a prepared statement, the average
@@ -1129,7 +1233,21 @@ key "msdn/arrayBinding"
 \begin_layout Standard
 In contrast to the execution of 100,000 prepared, but discrete inserts (average:
  51.974 seconds, standard deviation: 365ms), the insert time can be further
- reduced ...
+ reduced to 646ms (standard deviation: 33ms) with the help of batch insert
+ mechanisms, a speed-up of 99%.
+ In the case of batch inserts, the measurement was determined through 1000
+ runs and the measured time includes the generation and execution of a single
+ prepared statement containing 100,000 rows, as well as a single commit
+ at the end of the transaction.
+ As with the measurement in Sect.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Prepared-Statements"
+
+\end_inset
+
+, an empty instance of READINGS_PK was used for every run.
 \end_layout
 
 \begin_layout Standard
@@ -1217,22 +1335,11 @@ The employed database system allows column tables without explicit primary
 
 \begin_layout Standard
 To evaluate the costs of explicit keys, batches of 100,000 readings have
- been inserted into the tables shown in listing 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-QV
-\end_layout
-
-\end_inset
-
-.
+ been inserted into the schemas READINGS_PK, READINGS_IO_PK and READINGS_IO.
  In each case, the measured time includes the generation of a prepared statement
  containing 100,000 rows, the execution of this statement on an empty table
  and a single commit at the end of this transaction.
- Merge times are not included and logs were disabled during the insertion.
- Both measurements have been repeated 1000 times.
+ All three measurements have been repeated 1000 times.
 \end_layout
 
 \begin_layout Standard
@@ -1245,21 +1352,13 @@ reference "fig:Insert-Only"
 \end_inset
 
 .
- 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Vergleich mit PK Table
-\end_layout
-
-\end_inset
-
- Insertion into an insert-only table with explicit primary key takes an
- average of 612ms, with a standard deviation of 32ms.
+ Insertion into a regular column table with explicit primary key takes an
+ average of 646ms (standard deviation: 33ms).
+ Insert-only tables with an explicit primary key are only marginally faster,
+ with an average of 612ms (standard deviation: 32ms).
  In contrast, insertions into a table without any explicit keys average
  166ms, with a standard deviation of 16ms.
- That means that insert times could be reduced by approximately 73% through
+ That means that insert times can be reduced by approximately 76% through
  the omission of unnecessary keys.
 \end_layout
 
@@ -1360,21 +1459,11 @@ key "DBLP:conf/dasfaa/KrugerGTPZF10"
 \end_layout
 
 \begin_layout Standard
-The second table shown in listing 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-QV
-\end_layout
-
-\end_inset
-
- was used to measure the impact of transaction logs on insert performance.
+The schema READINGS_IO was used to measure the impact of transaction logs
+ on insert performance.
  Again, the measured time includes the generation of a prepared statement
  containing 100,000 rows, its execution on an empty table and a single commit
  at the end of this transaction.
- Merge times are not included and logs were disabled during the insertion.
  The measurement has been repeated 1000 times.
 \end_layout
 
@@ -1435,6 +1524,18 @@ Comparison of insert performance of ...
 
 \begin_layout Subsection
 [Parallelisation]
+\end_layout
+
+\begin_layout Standard
+-> Verweis auf Quellen 
+\begin_inset Quotes eld
+\end_inset
+
+In-memory toll für Parallelisation
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
