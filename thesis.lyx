@@ -298,7 +298,7 @@ on tests, the generated readings should be based on real power consumption
 \end_layout
 
 \begin_layout Subsection
-[Implementierung]
+Implementation
 \end_layout
 
 \begin_layout Standard
@@ -947,7 +947,7 @@ Schema, in das geinsertet wird
 \end_layout
 
 \begin_layout Subsection
-Results
+Lessons Learned
 \end_layout
 
 \begin_layout Itemize
@@ -959,7 +959,7 @@ Inserzeit für Batches
 \end_layout
 
 \begin_layout Itemize
-Merge-Problematik
+Merge-Problematik?
 \end_layout
 
 \begin_layout Section
@@ -969,7 +969,7 @@ name "sec:Acceleration-of-INSERT"
 
 \end_inset
 
-Acceleration of INSERT Statements
+Acceleration of INSERT-Statements
 \end_layout
 
 \begin_layout Standard
@@ -1188,7 +1188,7 @@ name "fig:naive-insert"
 
 \end_inset
 
-...
+Comparison of standard and prepared statements
 \end_layout
 
 \end_inset
@@ -1268,7 +1268,7 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-...
+Comparison of prepared statements and prepared batches
 \end_layout
 
 \end_inset
@@ -1414,7 +1414,15 @@ Restraining Disaster Recovery
 
 \begin_layout Standard
 Transacation logs are an important measure to safeguard the compliance of
- the ACID properties, particularly with regard to atomicity and durability.
+ the ACID properties, particularly with regard to atomicity and durability
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Haerder:1983:PTD:289.291"
+
+\end_inset
+
+.
  However, one could imagine to give up parts of the ACID properties in exchange
  for performance benefits due to the supposed architecture of an advanced
  metering infrastructure.
@@ -1509,7 +1517,7 @@ name "fig:Logging"
 
 \end_inset
 
-Comparison of insert performance of ...
+Impact of transactional logging on insert performance
 \end_layout
 
 \end_inset
@@ -1523,16 +1531,16 @@ Comparison of insert performance of ...
 \end_layout
 
 \begin_layout Subsection
-[Parallelisation]
+Parallel Execution of INSERT-Statements
 \end_layout
 
 \begin_layout Standard
--> Verweis auf Quellen 
-\begin_inset Quotes eld
-\end_inset
+-> Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:parallelisation"
 
-In-memory toll für Parallelisation
-\begin_inset Quotes erd
 \end_inset
 
 
@@ -1560,7 +1568,13 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-...
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:parallelisation"
+
+\end_inset
+
+Performance gain by parallel execution of INSERT-statements
 \end_layout
 
 \end_inset
@@ -1582,7 +1596,7 @@ Compression
 \end_layout
 
 \begin_layout Subsection
-[Heavy -vs Lightweight?]
+[Heavy -vs Lightweight]
 \end_layout
 
 \begin_layout Subsection
@@ -4020,7 +4034,8 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Estimation of main memory consumption for the given number of households
+Memory footprint of tables READINGS_IO and READINGS_RLE as a function of
+ the number of profiles
 \end_layout
 
 \end_inset
@@ -4063,8 +4078,34 @@ key "Graefe91datacompression"
 
 \begin_layout Standard
 In order to estimate the impact of the proposed compression strategy on
- the insert process, the execution times of the merge process have been
- measured using the tables READINGS_IO and READINGS_RLE.
+ the insert process, the execution time of the merge process has been measured
+ for different base datasets.
+ This base dataset, consisting of a number of profiles generated analogous
+ to the ones in Sect.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Estimation-of-Consumption"
+
+\end_inset
+
+ is merged completely into the tables READINGS_IO and READINGS_RLE.
+ Afterwards, another 100 profiles (3,504,000 rows) are inserted into the
+ tables.
+ Then, the time is measured it takes to merge the new records with the base
+ dataset.
+\end_layout
+
+\begin_layout Standard
+The results are depicted in Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:merge-comparison"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -4089,7 +4130,13 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-...
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:merge-comparison"
+
+\end_inset
+
+Comparison of merge durations for different schemas and base datasets
 \end_layout
 
 \end_inset
@@ -4119,7 +4166,12 @@ Tradeoff RowID - Insert-Performance
 \end_layout
 
 \begin_layout Itemize
-Ausstehend: Compression
+Compression: kein Insert, aber großer Platzvorteil
+\end_layout
+
+\begin_layout Itemize
+Großes Problem: merge-Verhalten (exponentielles Wachstum) -> Partitionierung,
+ Aging
 \end_layout
 
 \begin_layout Standard
@@ -4140,7 +4192,7 @@ Benchmark Environment
 \begin_layout Standard
 \align center
 \begin_inset Tabular
-<lyxtabular version="3" rows="11" columns="3">
+<lyxtabular version="3" rows="12" columns="3">
 <features tabularvalignment="middle" tabularwidth="100col%">
 <column alignment="left" valignment="top" width="0pt">
 <column alignment="center" valignment="top" width="0pt">
@@ -4313,6 +4365,39 @@ Network Connectivity
 
 \size scriptsize
 NX3031 10-Gigabit LAN
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="default" bottomspace="2mm">
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+NewDB Version
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+1.50.327452 (dbg)
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset

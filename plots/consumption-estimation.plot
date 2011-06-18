@@ -4,7 +4,7 @@ set size 0.8,0.8
 #set terminal png
 #set output "consumption-estimation.png"
 set notitle
-set xlabel "Number of Households" 
+set xlabel "Number of Profiles" 
 set ylabel "Memory Footprint [MB]" 
 set logscale x 10 
 set logscale y 10

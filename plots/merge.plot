@@ -6,6 +6,7 @@ set size 0.7,0.7
 
 set xlabel "Base Dataset [Number of Profiles]"
 set ylabel "Time [ms]"
+set format y "10^{%L}"
 set style data histogram
 set style histogram cluster gap 2
 #set style histogram rowstacked
