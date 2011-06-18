@@ -174,7 +174,7 @@ key "Stonebraker:2005:CCD:1083592.1083658"
 
 \begin_layout Standard
 This raises the question to which extent in-memory databases can solve the
- problems utility companies and energy providers throughout Europe will
+ challenges utility companies and energy providers throughout Europe will
  have to face in the near future.
  The growing importance of renewable and distributed energy sources like
  wind and solar energy as part of the aimed at energy turnaround leads to
@@ -4041,6 +4041,69 @@ name "sub:Impact-on-Insert"
 \end_inset
 
 Impact on Insert Performance
+\end_layout
+
+\begin_layout Standard
+Graefe and Shapiro have shown that data compression can speed up operations
+ rahter related to analytical queries 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Graefe91datacompression"
+
+\end_inset
+
+.
+ In contrast, it has to be assumed that compression does have a negative
+ impact on inserts, or the merge process specifically.
+ As compression isn't carried out on the write-optimized differential buffer,
+ execution times of INSERT-statements aren't affected.
+ However, a potentially expensive recompression has to be performed during
+ each merge process.
+\end_layout
+
+\begin_layout Standard
+In order to estimate the impact of the proposed compression strategy on
+ the insert process, the execution times of the merge process have been
+ measured using the tables READINGS_IO and READINGS_RLE.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plots/merge.eps
+	width 80col%
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
