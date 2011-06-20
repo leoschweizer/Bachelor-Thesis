@@ -26,7 +26,7 @@
 \font_tt_scale 100
 
 \graphics pdftex
-\default_output_format default
+\default_output_format pdf2
 \output_sync 0
 \bibtex_command default
 \index_command default
@@ -78,24 +78,7 @@
 
 \begin_body
 
-\begin_layout Title
-Optimizing Storage of Energy Event Data in In-Memory Databases
-\end_layout
-
-\begin_layout Author
-Leonhard Schweizer
-\end_layout
-
-\begin_layout Institute
-Hasso Plattner Institute
-\begin_inset Newline newline
-\end_inset
-
-Chair Enterprise Platform and Integration Concepts
-\begin_inset Newline newline
-\end_inset
-
-
+\begin_layout Standard
 \begin_inset ERT
 status open
 
@@ -103,12 +86,158 @@ status open
 
 
 \backslash
-email{leonhard.schweizer@student.hpi.uni-potsdam.de}
+begin{titlepage}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{empty} 
+\backslash
+begin{center} 	
+\backslash
+vspace{0.1cm} 	
+\backslash
+LARGE 	Bachelor's Thesis
+\backslash
+
+\backslash
+ 	
+\backslash
+vspace{0.25cm} 	
+\backslash
+Huge 	Optimizing Storage of Energy Event Data in In-Memory Databases
+\backslash
+
+\backslash
+ 	
+\backslash
+vspace{0.5cm} 	
+\backslash
+large 	
+\backslash
+vspace{1.0cm} 	
+\backslash
+LARGE 	
+\backslash
+textbf{Leonhard Schweizer}
+\backslash
+
+\backslash
+ 	
+\backslash
+normalsize   leonhard.schweizer@student.hpi.uni-potsdam.de
+\backslash
+
+\backslash
+ 	
+\backslash
+vspace{0.5cm} 	
+\backslash
+small 	Hasso Plattner Institute for IT Systems Engineering
+\backslash
+
+\backslash
+ 	Enterprise Platform and Integration Concepts Chair
+\backslash
+
+\backslash
+ 	
+\backslash
+vspace{0.5cm}
 \end_layout
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename figures/hpi_logo.pdf
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{0.25cm}August-Bebel-Str.
+ 88
+\backslash
+
+\backslash
+ 	14482 Potsdam, Germany
+\backslash
+
+\backslash
+ 	
+\backslash
+url{http://epic.hpi.uni-potsdam.de/}
+\backslash
+
+\backslash
+ 	
+\backslash
+vspace{1.50cm}  Supervisors: 
+\backslash
+vspace{0.5cm}
+\backslash
+
+\backslash
+  Dr.
+ Alexander Zeier
+\backslash
+
+\backslash
+Matthieu-P.
+ Schapranow
+\backslash
+
+\backslash
+ Christian Schwarz  
+\backslash
+vspace{0.5cm}
+\backslash
+
+\backslash
+ Hasso Plattner Institute
+\backslash
+
+\backslash
+ Potsdam, Germany  
+\backslash
+vspace{1.5cm}
+\backslash
+
+\backslash
+ June 30th, 2011 
+\backslash
+end{center} 
+\backslash
+end{titlepage}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing double
+\align center
+
+\series bold
+\size largest
+Optimizing Storage of Energy Event Data in In-Memory Databases
 \end_layout
 
 \begin_layout Abstract
@@ -4615,6 +4744,55 @@ Network Connectivity
 LatexCommand bibtex
 bibfiles "thesis"
 options "C:/Users/Leo/AppData/Roaming/MiKTeX/2.9/tex/latex/lncs/splncs03"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{empty} 
+\backslash
+chapter*{Eigenst
+\backslash
+"andigkeitserkl
+\backslash
+"arung}
+\end_layout
+
+\begin_layout Plain Layout
+
+Ich erkl
+\backslash
+"are hiermit, dass ich die vorliegende Arbeit selbst
+\backslash
+"andig verfasst und  keine anderen als die genannten Quellen und Hilfsmittel
+ verwendet habe.
+\backslash
+
+\backslash
+ 
+\backslash
+vspace{2.0cm}
+\backslash
+
+\backslash
+ Potsdam, den 30.
+ Juni 2011 
+\backslash
+vspace{1.0cm}
+\backslash
+
+\backslash
+ Leonhard Schweizer
+\end_layout
 
 \end_inset
 
