@@ -231,13 +231,16 @@ end{titlepage}
 
 \end_layout
 
-\begin_layout Standard
-\paragraph_spacing double
-\align center
-
-\series bold
-\size largest
+\begin_layout Title
 Optimizing Storage of Energy Event Data in In-Memory Databases
+\end_layout
+
+\begin_layout Author
+Leonhard Schweizer
+\end_layout
+
+\begin_layout Institute
+Hasso Plattner Institute
 \end_layout
 
 \begin_layout Abstract
@@ -875,12 +878,10 @@ reference "sub:Data-Producer"
  again via TCP/IP.
  The primary reason for supporting multiple database clients is the evaluation
  of distributed database systems, which is the subject of another thesis
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Verweis
-\end_layout
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sten"
 
 \end_inset
 
@@ -1664,7 +1665,53 @@ Parallel Execution of INSERT-Statements
 \end_layout
 
 \begin_layout Standard
--> Fig.
+In order to allow for a better evaluation of the impact of parallel inserts,
+ a bigger dataset of 1,000,000 rows has been inserted into the table READINGS_IO.
+ The time measurement, which begins with the start of the first and ends
+ with the return of the last spawned thread has been repeated 1000 times
+ for 
+\begin_inset Formula $2^{n}$
+\end_inset
+
+ threads, where 
+\begin_inset Formula $n\in[1,6]$
+\end_inset
+
+.
+ Thereby, the dataset is divided equally to all threads and each thread
+ establishes a JDBC connection to the database and executes a single prepared
+ insert statement containing 
+\begin_inset Formula $\frac{1,000,000}{n}$
+\end_inset
+
+ rows.
+ Every thread initiates a commit before returning, so the measured time
+ includes 1 commit for 
+\begin_inset Formula $n=1$
+\end_inset
+
+ and 64 commits for 
+\begin_inset Formula $n=6$
+\end_inset
+
+.
+ The server HPA, which hosts the database has a total of 12 cores with hyper-thr
+eading, yielding 24 logical processors.
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+nur 4 cores auf client rechner??
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The results of the measurement are depicted in Fig.
  
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1672,7 +1719,29 @@ reference "fig:parallelisation"
 
 \end_inset
 
+.
+ The insert time using one thread averages 
+\begin_inset Formula $28.664$
+\end_inset
 
+ seconds, with a standard deviation of 
+\begin_inset Formula $1304\mathrm{ms}$
+\end_inset
+
+.
+ Based on this value, the theoretical optimum behaviour is plotted as 
+\begin_inset Formula $\frac{v_{n-1}}{2}$
+\end_inset
+
+ for a number of 
+\begin_inset Formula $n$
+\end_inset
+
+ threads and the projected time measurement 
+\begin_inset Formula $v_{n-1}$
+\end_inset
+
+ of the preceding number of threads.
 \end_layout
 
 \begin_layout Standard
