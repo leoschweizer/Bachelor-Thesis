@@ -547,7 +547,17 @@ reference "sub:Concentrator"
 ).
  A dedicated, persistent TCP/IP connection is built between the data producer
  and a concentrator for each thread the data producer is spawning.
- Thereby, one thread simulates up to XYZ smart meters.
+ Thereby, one thread simulates up to XYZ
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Zahl!!!
+\end_layout
+
+\end_inset
+
+ smart meters.
  Thus, the number of smart meters that can be simulated by a single instance
  is mostly limited by the number of threads the host system is capable to
  handle and the network capacity.
@@ -2968,6 +2978,39 @@ To estimate the main memory consumption of large customer bases, profiles
  However, the actual interval doesn't have a considerable effect on memory
  consumption due to the effects of dictionary compression.
  The year 2010 served as date range for the readings.
+ 
+\end_layout
+
+\begin_layout Standard
+The profiles have been inserted and merged into the tables READINGS_IO and
+ READINGS_RLE, so the measured memory footprint constitutes the size of
+ the read-optimized main store.
+ Since all rows have to be merged eventually to allow for real time analyses,
+ the consumption behaviour of the main store is the one that matters.
+\end_layout
+
+\begin_layout Standard
+Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Footprint-IO"
+
+\end_inset
+
+ shows the memory footprint of the table READINGS_IO, which doesn't utilize
+ any compression techniques besides domain coding.
+ Apperently, the row id column, which is an implicit component of insert-only
+ tables, makes up roughly 45% of the total memory consumption even when
+ not further compressing the timestamp and value column.
+ One can also see that this column is in no way optimized besides domain
+ coding, since its footprint can be estimated very well by formula 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:domain-coding"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -2984,6 +3027,12 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:Footprint-IO"
+
+\end_inset
+
 Memory footprint of table READINGS_IO for a number of smart meters 
 \begin_inset Formula $n$
 \end_inset
@@ -4292,6 +4341,8 @@ reference "sub:Estimation-of-Consumption"
  tables.
  Then, the time is measured it takes to merge the new records with the base
  dataset.
+ The measurement was carried out on Host HPA and the database was configured
+ to use at most four threads for the merge.
 \end_layout
 
 \begin_layout Standard
@@ -4304,6 +4355,23 @@ reference "fig:merge-comparison"
 \end_inset
 
 .
+ In contrast to the assumption, it shows clearly that a run-length encoding
+ on the columns datetime and value doesn't have a relevant impact on the
+ merge process.
+ One possible reason for this behaviour is that the compression overhead
+ is compensated by the reduced data volume, which leads to a higher cache
+ locality and reduced waiting time when reading data from main memory.
+ 
+\end_layout
+
+\begin_layout Standard
+When merging with an empty table, the merge time averages 6033ms without
+ run-length encoding (standard deviation: 54ms) and 6130ms (standard deviation:
+ 72ms) when applying this additional compression.
+ If the table already contains 1000 profiles (350,40,000 rows), the merge
+ takes an average of 3 minutes 15.680 seconds (standard deviation: 5.089 seconds)
+ for the table READINGS_IO and 3 minutes 10.890 seconds (standard deviation:
+ 4.238 seconds) for the table READINGS_RLE.
 \end_layout
 
 \begin_layout Standard
