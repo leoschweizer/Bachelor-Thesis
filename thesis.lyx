@@ -2533,7 +2533,7 @@ However, one has to take into consideration that the domain coded datetime
 \mathrm{D}_{\mathrm{id}}(n) & =n\cdot35040\cdot\lceil\log_{2}(n)\rceil\\
 \mathrm{RLE}_{\mathrm{id}}(n) & =n\cdot\lceil\log_{2}(n)\rceil+n\cdot\lceil\log_{2}(n\cdot35040)\rceil\\
 \mathrm{D}_{\mathrm{datetime}}(n) & =n\cdot35040\cdot\lceil\log_{2}(35040)\rceil\\
-\mathrm{RLE_{datetime}(n)} & =35040\cdot\lceil\log_{2}(35040)\rceil+35040\cdot\lceil\log_{2}(n\cdot35040)\rceil\\
+\mathrm{RLE_{datetime}(n)} & =35040\cdot\lceil\log_{2}(35040)\rceil+35040\cdot\lceil\log_{2}(n\cdot35040)\rceil\label{eq:datetime-RLE}\\
 \mathrm{D_{value}(n)} & =n\cdot35040\cdot\lceil\log_{2}(100)\rceil\\
 \mathrm{RLE_{value}(n)} & =100\cdot\lceil\log_{2}(100)\rceil+100\cdot\lceil\log_{2}(n\cdot35040)\rceil
 \end{align}
@@ -2882,7 +2882,7 @@ In the worst case, the memory footprint of the value column hence can be
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-S_{\mathrm{value}}(n)=35040\cdot100\cdot\lceil\log_{2}(100)\rceil+35040\cdot100\cdot\lceil\log_{2}(n\cdot35040)\rceil
+S_{\mathrm{value}}(n)=35040\cdot100\cdot\lceil\log_{2}(100)\rceil+35040\cdot100\cdot\lceil\log_{2}(n\cdot35040)\rceil\label{eq:value-RLE}
 \end{equation}
 
 \end_inset
@@ -2902,7 +2902,7 @@ which is still better than domain coding alone for
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-S_{\mathrm{total}}(n) & =n\cdot35040\cdot\lceil\log_{2}(n)\rceil+\\
+S_{\mathrm{total}}(n) & =n\cdot35040\cdot\lceil\log_{2}(n)\rceil+\label{eq:s-total}\\
  & +35040\cdot\lceil\log_{2}(35040)\rceil+35040\cdot\lceil\log_{2}(n\cdot35040)\rceil+\nonumber \\
  & +35040\cdot100\cdot\lceil\log_{2}(100)\rceil+35040\cdot100\cdot\lceil\log_{2}(n\cdot35040)\rceil\nonumber 
 \end{align}
@@ -2989,6 +2989,10 @@ The profiles have been inserted and merged into the tables READINGS_IO and
  the consumption behaviour of the main store is the one that matters.
 \end_layout
 
+\begin_layout Subsubsection
+Estimation for the Table READINGS_IO
+\end_layout
+
 \begin_layout Standard
 Table 
 \begin_inset CommandInset ref
@@ -3072,13 +3076,17 @@ reference "eq:readings_io"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-S_{\mathrm{total}}(n) & =n\cdot35040\cdot\lceil\log_{2}(n)\rceil+n\cdot35040\cdot\lceil\log_{2}(35040)\rceil\\
+S_{\mathrm{io}}(n) & =n\cdot35040\cdot\lceil\log_{2}(n)\rceil+n\cdot35040\cdot\lceil\log_{2}(35040)\rceil+\label{eq:readings_io}\\
  & +n\cdot35040\cdot\lceil\log_{2}(100)\rceil+n\cdot35040\cdot\lceil\log_{2}(n\cdot35040)\rceil\nonumber 
 \end{align}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsubsection
+Estimation for the Table READINGS_RLE
 \end_layout
 
 \begin_layout Standard
@@ -3091,7 +3099,95 @@ reference "tab:Footprint-RLE"
 \end_inset
 
 .
- 
+ When comparing the actual consumption values of the run-length compressed
+ columns with the results from the formulas 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:datetime-RLE"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:value-RLE"
+
+\end_inset
+
+, it becomes evident that they have a much higher variance than the one
+ for domain coding.
+ For instance, the projected footprint of the timestamp column for 
+\begin_inset Formula $n=10,000$
+\end_inset
+
+ is around 190KB, a deviation of almost 60%.
+ The projected consumption of the value column for the same number of profiles
+ is around ten times higher than the actual one, but formula 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:value-RLE"
+
+\end_inset
+
+ maps the worst case anyway.
+ It has to be assumed that these deviations are resulting from overheads
+ of the run-length compression implementation.
+ Considering the fact that these two columns only add up to a fraction of
+ the total memory footprint of roughly 0.1% for 
+\begin_inset Formula $n=10,000$
+\end_inset
+
+, the approximation given by formulas 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:datetime-RLE"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:value-RLE"
+
+\end_inset
+
+ is still sufficient to project the footprint of the table READINGS_RLE
+ for large 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ Taking the already derivated formula 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:s-total"
+
+\end_inset
+
+ and the domain coding of the row id column into account, the footprint
+ can be estimated with the help of formula 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:readings_rle"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+S_{\mathrm{rle}}(n)=S_{\mathrm{total}}+n\cdot35040\cdot\lceil\log_{2}(n\cdot35040)\rceil\label{eq:readings_rle}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Comparison to Storage on Disk
 \end_layout
 
 \begin_layout Standard
@@ -3139,7 +3235,34 @@ reference "tab:footprint-estimation"
 
 .
  While the values for 10,000 profiles are actual measurements, the others
- are projections with the help of the formulas [...].
+ are projections with the help of the formulas 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:readings_io"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:readings_rle"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:CSV-size"
+
+\end_inset
+
+.
+ They show that the footprint of 
+\begin_inset Formula $10,000,000$
+\end_inset
+
+ profiles can be reduced by roughly 65% compared to a storage on disk when
+ making use of column compression potentials in in-memory databases.
 \end_layout
 
 \begin_layout Standard
