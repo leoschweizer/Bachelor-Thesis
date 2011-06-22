@@ -2461,9 +2461,9 @@ reference "eq:domain-coding"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-S_{\mathrm{id}}(n) & =n\cdot35040\cdot\lceil\log_{2}(n)\rceil\\
+S_{\mathrm{id}}(n) & =n\cdot35040\cdot\lceil\log_{2}(n)\rceil\label{eq:space-id}\\
 S_{\mathrm{datetime}}(n) & =n\cdot35040\cdot\lceil\log_{2}(35040)\rceil\label{eq:space-datetime-1}\\
-S_{\mathrm{value}}(n) & =n\cdot35040\cdot\lceil\log_{2}(100)\rceil
+S_{\mathrm{value}}(n) & =n\cdot35040\cdot\lceil\log_{2}(100)\rceil\label{eq:space-value}
 \end{align}
 
 \end_inset
@@ -2999,11 +2999,31 @@ reference "tab:Footprint-IO"
 
  shows the memory footprint of the table READINGS_IO, which doesn't utilize
  any compression techniques besides domain coding.
- Apperently, the row id column, which is an implicit component of insert-only
- tables, makes up roughly 45% of the total memory consumption even when
- not further compressing the timestamp and value column.
- One can also see that this column is in no way optimized besides domain
- coding, since its footprint can be estimated very well by formula 
+ With the help of these measurements, the accuracy of the projection formula
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:domain-coding"
+
+\end_inset
+
+ for domain coded columns can be evaluated.
+ The meter id column may server as an example.
+ According to formula 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:domain-coding"
+
+\end_inset
+
+, it should require 584.80MB of main memory.
+ The actual consumption differs from this value only by 30KB.
+\end_layout
+
+\begin_layout Standard
+One can also see that the row id column, which is an implicit component
+ of insert-only tables, is in no way optimized besides domain coding, since
+ its footprint can be estimated very well by formula 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:domain-coding"
@@ -3011,6 +3031,115 @@ reference "eq:domain-coding"
 \end_inset
 
 .
+ The latter thus can be used to improve the projection of the total memory
+ footprint of the table READINGS_IO for large 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ Considering the already mentioned formulas 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:space-id"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:space-datetime-1"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:space-value"
+
+\end_inset
+
+, the footprint projection for the table READINGS_IO can be calculated by
+ formula 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:readings_io"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+S_{\mathrm{total}}(n) & =n\cdot35040\cdot\lceil\log_{2}(n)\rceil+n\cdot35040\cdot\lceil\log_{2}(35040)\rceil\\
+ & +n\cdot35040\cdot\lceil\log_{2}(100)\rceil+n\cdot35040\cdot\lceil\log_{2}(n\cdot35040)\rceil\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The memory footprint of the table READINGS_RLE, which applies a run-length
+ encoding to the timestamp and value columns, is depicted in table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Footprint-RLE"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+In order to give a comparison of space requirements with disk-based storage,
+ the same profiles which were inserted into the database were saved as comma
+ separated values in plain text files (ASCII encoded, one byte per character).
+ Since the timestamp has a fixed length and the values hava an average of
+ two digits, each line consists of a fixed part which adds up to 15 bytes,
+ including separators and line break.
+ The other part is the meter id, whose length varies.
+ Assumed that the meter id lies in the interval mentioned above, the size
+ (in bits) of a file containing one year profiles of 
+\begin_inset Formula $n$
+\end_inset
+
+ smart meters can be projected with formula 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:CSV-size"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+S_{\mathrm{csv}}(n)=n\cdot35040\cdot15\cdot8+{\displaystyle \sum_{k=2}^{n+1}}\lceil\log_{10}(k)\rceil\cdot35040\cdot8\label{eq:CSV-size}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A comparison of the three storage modes domain coded table, run-length compresse
+d table and disk storage in CSV format is given in table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:footprint-estimation"
+
+\end_inset
+
+.
+ While the values for 10,000 profiles are actual measurements, the others
+ are projections with the help of the formulas [...].
 \end_layout
 
 \begin_layout Standard
@@ -3018,10 +3147,6 @@ reference "eq:domain-coding"
 wide false
 sideways false
 status open
-
-\begin_layout Plain Layout
-
-\end_layout
 
 \begin_layout Plain Layout
 \begin_inset Caption
@@ -3509,6 +3634,12 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:Footprint-RLE"
+
+\end_inset
+
 Memory footprint of table READINGS_RLE for a number of smart meters 
 \begin_inset Formula $n$
 \end_inset
@@ -3971,17 +4102,6 @@ Total
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula 
-\[
-S_{\mathrm{csv}}(n)=n\cdot35040\cdot15\cdot{\displaystyle \sum_{k=2}^{n+1}}\lceil\log_{10}(k)\rceil\cdot35040
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset Float table
 wide false
 sideways false
@@ -3991,6 +4111,12 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:footprint-estimation"
+
+\end_inset
+
 Estimated space requirements of profiles containing one year of meter readings,
  on disk and in-memory
 \end_layout
@@ -4248,42 +4374,6 @@ Compressed
 </cell>
 </row>
 </lyxtabular>
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-placement h
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename plots/consumption-estimation.eps
-	width 90col%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption
-
-\begin_layout Plain Layout
-Memory footprint of tables READINGS_IO and READINGS_RLE as a function of
- the number of profiles
-\end_layout
 
 \end_inset
 
