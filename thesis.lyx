@@ -547,17 +547,7 @@ reference "sub:Concentrator"
 ).
  A dedicated, persistent TCP/IP connection is built between the data producer
  and a concentrator for each thread the data producer is spawning.
- Thereby, one thread simulates up to XYZ
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Zahl!!!
-\end_layout
-
-\end_inset
-
- smart meters.
+ Thereby, one thread simulates up to 1000 smart meters.
  Thus, the number of smart meters that can be simulated by a single instance
  is mostly limited by the number of threads the host system is capable to
  handle and the network capacity.
@@ -1803,8 +1793,49 @@ Performance gain by parallel execution of INSERT-statements
 Compression
 \end_layout
 
-\begin_layout Subsection
-[Heavy -vs Lightweight]
+\begin_layout Standard
+Data volumes like the ones involved in a smart metering infrastructure entail
+ the need for data compression.
+ Since data of the same type is stored in continuous blocks, column stores
+ are particularly suited for this task 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Abadi:2008:QEC:1467436"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Heavyweight compression algorithms like Huffman coding 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "huf52"
+
+\end_inset
+
+, arithmetic coding 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Witten:1987:ACD:214762.214771"
+
+\end_inset
+
+ or the LZW algorithm 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Welch:1984:THD:1319729.1320134"
+
+\end_inset
+
+ which give up compression and decompression speed to increase compression
+ ratio typically result in performance losses.
+ With insert performance beeing a crucial part of the depicted scenario,
+ the focus of this paper is on lightweight column compression techniques.
+ An overview over available techniques is given in the next section in order
+ to make an evaluation in the context of energy event data possible.
 \end_layout
 
 \begin_layout Subsection
@@ -1818,17 +1849,43 @@ Lightweight Column Compression Techniques
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Einteilung / Überblick, Verweis auf Bit Compression, Variable Byte Coding,
- PFOR -> nicht Gegenstand der Betrachtung
+The lightweight column compression techniques which are presented in the
+ following can be divided into three groups.
+ Domain coding replaces values of any type by shorter ordinal references
+ and is the underlying basis of all other methods.
+ Common value suppression techniques like prefix coding and sparse coding
+ and in a broader sense run-length encoding and cluster coding try to replace
+ frequent values by shorter representations.
+ Indirect coding introduces local dictionaries to reduce the width of references
+ further.
 \end_layout
+
+\begin_layout Standard
+Particularly domain and indirect coding would be pointless if full integer
+ widths would have to be used to store values.
+ For that reason, they rely on techniques to reduce value width.
+ These include bit compression 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sanders:intersection"
 
 \end_inset
 
+, variable byte coding 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Silva:2000:FFW:348751.348754"
 
+\end_inset
+
+ and patched frame-of-reference compression 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1109/ICDE.2006.150"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
