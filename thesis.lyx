@@ -1168,6 +1168,31 @@ Literaturverweis
 \end_inset
 
 .
+ The average execution time after 1000 inserts averages 410ms in this scenario.
+ That means that the target insert rate of 
+\begin_inset Formula $112,000$
+\end_inset
+
+ readings per second which is required to process the 100 million smart
+ meters could be outperformed considerably.
+ It is important to note that this time measurement is even falsified by
+ a deficient implementation of the merge process (cf.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Restraining-Disaster-Recovery"
+
+\end_inset
+
+) which blocks pending INSERT statements during a merge although it should
+ be carried out asynchronously 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "conf/dasfaa/KrugerGTPZF10"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -1195,15 +1220,8 @@ reference "sec:Compression"
 \end_inset
 
 .
- In the third place, the execution time of the merge process (cf.
- 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sub:Restraining-Disaster-Recovery"
-
-\end_inset
-
-) turned out to grow exponentially with the size of the dataset.
+ In the third place, the execution time of the merge process turned out
+ to grow exponentially with the size of the dataset.
  But since Krueger et.
  al.
  
@@ -1213,8 +1231,9 @@ key "conf/dasfaa/KrugerGTPZF10"
 
 \end_inset
 
- have already shown that the merge process can be carried in linear dependency
- of the size of the dataset, this problem isn't considered in this thesis.
+ have already shown that the merge process can be carried out in linear
+ dependency of the size of the dataset, this problem isn't considered in
+ this thesis.
 \end_layout
 
 \begin_layout Section
