@@ -547,7 +547,11 @@ reference "sub:Concentrator"
 ).
  A dedicated, persistent TCP/IP connection is built between the data producer
  and a concentrator for each thread the data producer is spawning.
- Thereby, one thread simulates up to 1000 smart meters.
+ Thereby, one thread simulates up to 
+\begin_inset Formula $375,000$
+\end_inset
+
+ smart meters.
  Thus, the number of smart meters that can be simulated by a single instance
  is mostly limited by the number of threads the host system is capable to
  handle and the network capacity.
@@ -1061,35 +1065,156 @@ Since the database client is intended for running on the same host as the
 \end_layout
 
 \begin_layout Subsection
-Simulation Environment
+Simulation Environment and Execution
 \end_layout
 
-\begin_layout Itemize
-Hardware (DB, Producer)
+\begin_layout Standard
+According to the Federal Statistical Office there are 40.2 million households
+ and 3.6 million businesses in Germany 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "DestatisHouseholds,DestatisCompanies"
+
+\end_inset
+
+.
+ Since many companies have branches at multiple locations and huge branches
+ will be equipped with multiple smart meters, the total number of smart
+ meters is assumed to be around 60 million for non-residential customers.
+ Thus, a total of 100 million smart meters can be expected after a nationwide
+ rollout of smart meters in Germany.
+ For that reason, the primary gaol of the simulation is to generate the
+ load of 100 million smart meters which send meter readings in 15 minute
+ intervals.
 \end_layout
 
-\begin_layout Itemize
-Topologie
+\begin_layout Standard
+For the generation of the meter readings, four workstations with equipment
+ equivalent to host HPC are used.
+ On each of them, one single instance of the data producer is running, simulatin
+g 25 million smart meters.
+ The data producer is connected to exactly one concentrator which is running
+ on the same host.
+ Since the simulated smart meters are distributed uniformly accross the
+ 15 minute interval, each concentrator receives roughly 
+\begin_inset Formula $28,000$
+\end_inset
+
+ meter readings per second.
+ Each concentrator is connected to a dedicated instance of the database
+ client which is running on the host of the database HPB and inserting incoming
+ readings into an instance of the table READINGS_RLE (cf.
+ Listing 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lis:Table-READINGS_RLE"
+
+\end_inset
+
+).
+ 
 \end_layout
 
-\begin_layout Itemize
-Schema, in das geinsertet wird
+\begin_layout Standard
+The frequency of incoming data events is dependent on the batch size of
+ the concentrator.
+ Lower batch sizes lead to a smooth CPU workload on the database system
+ but result in a higher overhead due to the increased number of executed
+ INSERT statements.
+ When using 
+\begin_inset Formula $10,000$
+\end_inset
+
+ as batch size, every concentrator forwards data more than twice per second.
+ The result is a constant CPU utilization of 40%-80% through the database.
+ In contrast, a batch size of 
+\begin_inset Formula $1,000,000$
+\end_inset
+
+ leads to peaks of 170% when data packets are received from a concentrator
+ every 36 seconds.
+ During this interval, there is no CPU load caused by the insertion of new
+ readings.
+ In both cases, the CPU load increases up to 300% during executions of the
+ merge process, since the test system is configured to utilize at most three
+ cores during this task.
 \end_layout
 
-\begin_layout Subsection
-Lessons Learned
+\begin_layout Standard
+For the purpose of planning security, a smooth ressource utilization is
+ the preferable option.
+ With regard to the optimization of insert performance, the highest possible
+ batch size is the first choice.
+ As real time analyses only make sense if the latest data is added to the
+ database in real time, the maximum turnaround time of meter readings is
+ another constraint when chosing the best batch size.
+ As trade-off of all this considerations, a batch size of 
+\begin_inset Formula $100,000$
+\end_inset
+
+ is chosen.
+ That means that a new meter reading will be transported to the database
+ system in under four seconds.
+ The CPU load of this configuration varies between 30% and 110%.
+ This leaves enough ressources for the simultaneous execution of analytical
+ queries which are investigated in another thesis
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Literaturverweis
 \end_layout
 
-\begin_layout Itemize
-Last auf der Datenbank
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Itemize
-Inserzeit für Batches
-\end_layout
+\begin_layout Standard
+During the execution of the simulation, three main problems became manifest.
+ First of all, early implementations of the database client weren't performant
+ enough to insert the incoming meter readings fast enough to avoid congestion.
+ The measures that were taken to solve this problem are explained in Sect.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Acceleration-of-INSERT"
 
-\begin_layout Itemize
-Merge-Problematik?
+\end_inset
+
+.
+ Secondly, first projections of the required amount of main memory for the
+ depicted scenario were too high to allow for a real world implementaion,
+ which lead to the investigation of compression potentials presented in
+ Sect.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Compression"
+
+\end_inset
+
+.
+ In the third place, the execution time of the merge process (cf.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Restraining-Disaster-Recovery"
+
+\end_inset
+
+) turned out to grow exponentially with the size of the dataset.
+ But since Krueger et.
+ al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "conf/dasfaa/KrugerGTPZF10"
+
+\end_inset
+
+ have already shown that the merge process can be carried in linear dependency
+ of the size of the dataset, this problem isn't considered in this thesis.
 \end_layout
 
 \begin_layout Section
@@ -1539,6 +1664,12 @@ Comparison of insert performance of tables with and without explicit primary
 \end_layout
 
 \begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Restraining-Disaster-Recovery"
+
+\end_inset
+
 Restraining Disaster Recovery
 \end_layout
 
@@ -1577,7 +1708,7 @@ A column store consists of a read-optimized main store and a write-optimized
  main store during the socalled merge process 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "DBLP:conf/dasfaa/KrugerGTPZF10"
+key "DBLP:conf/dasfaa/KrugerGTPZF10,HPI/GrundKPWZ/BmGOI"
 
 \end_inset
 
@@ -1728,6 +1859,25 @@ reference "fig:parallelisation"
 \end_inset
 
  of the preceding number of threads.
+ In theory and without considering the overhead of multithreading, the insert
+ process should take roughly 
+\begin_inset Formula $2.5$
+\end_inset
+
+ seconds when using 12 threads provided that it can be parallelized completely.
+ The actual value is 
+\begin_inset Formula $4.248$
+\end_inset
+
+ seconds (standard deviation: 
+\begin_inset Formula $168\mathrm{ms}$
+\end_inset
+
+).
+ Considering the fact that database overhead like the increased commit number
+ and the system overhead of multithreading is induced, it can be said that
+ the insert time scales almost perfectly with the number of threads and
+ cores.
 \end_layout
 
 \begin_layout Standard
@@ -1776,6 +1926,12 @@ Performance gain by parallel execution of INSERT-statements
 \end_layout
 
 \begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Compression"
+
+\end_inset
+
 Compression
 \end_layout
 
