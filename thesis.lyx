@@ -7,7 +7,6 @@
 \usepackage{calc}
 \usepackage{graphicx}
 \graphicspath{{.//}}
-\newcommand{\biburl}[2]{\url{#1} (last checked #2)} 
 \end_preamble
 \options final
 \use_default_options true
@@ -4912,25 +4911,90 @@ Comparison of merge durations for different schemas and base datasets
 Conclusion
 \end_layout
 
-\begin_layout Itemize
-Insert-Rate prinzipiell machbar
-\end_layout
+\begin_layout Standard
+By simulating the amount of meter readings that will arise when a smart
+ metering infrastructure has been established in Germany it could be shown
+ that this amount can be processed by an in-memory column store which utilizes
+ a write optimized differential buffer.
+ The target insert rate of 
+\begin_inset Formula $112,000$
+\end_inset
 
-\begin_layout Itemize
-Tradeoff RowID - Insert-Performance
-\end_layout
+ meter readings per second which corresponds to 
+\begin_inset Formula $100,000,000$
+\end_inset
 
-\begin_layout Itemize
-Compression: kein Insert, aber großer Platzvorteil
-\end_layout
+ smart meters could be outperformed significantly with the help of state-of-the-
+art hardware.
+ The execution time of the insertion of 
+\begin_inset Formula $100,000$
+\end_inset
 
-\begin_layout Itemize
-Großes Problem: merge-Verhalten (exponentielles Wachstum) -> Partitionierung,
- Aging
+ readings could be reduced to 
+\begin_inset Formula $170\mathrm{ms}$
+\end_inset
+
+ through the utilization of batch insert processing and insert-only tables,
+ allowing for at least 
+\begin_inset Formula $500,000$
+\end_inset
+
+ inserts per second.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Newpage newpage
+To achieve this insert rate, a trade-off between insert time and memory
+ footprint had to be made.
+ Insert-only tables can speed up the insertion by a factor of three compared
+ to standard column tables since a natural primary key can be omitted.
+ However, insert-only tables imply a row id column which can't be compressed
+ further besides domain coding.
+ This column makes up almost 70% of the total memory footprint of 
+\begin_inset Formula $1.8\mathrm{GB}$
+\end_inset
+
+ when storing 
+\begin_inset Formula $10,000$
+\end_inset
+
+ one year profiles.
+ Thus, it might be preferable to give up the performance gain of insert-only
+ tables if smaller customer bases have to be maintained.
+\end_layout
+
+\begin_layout Standard
+Despite the increased footprint of insert-only tables, the amount of main
+ memory which is required for the storage of meter readings could be reduced
+ by 65% compared to a storage on disk by taking advantage of compression
+ potentials in column stores.
+ Lightweight column compression techniques were utilized solely to achieve
+ this reduction.
+ Since the compression overhead is compensated by the reduced data volume,
+ the compression can be carried out without impairing the insert performance.
+\end_layout
+
+\begin_layout Standard
+Even though not object of special attention, the merge process turned out
+ to be the limiting factor.
+ Although it can be carried out in linear dependency to the size of the
+ dataset, the duration of the process would at some point outgrow the timespan
+ until the size of the differential buffer induces the initiation of another
+ merge.
+ Thus, the implementation of data partitioning and aging strategies is inevitabl
+e.
+\end_layout
+
+\begin_layout Standard
+In conclusion, it can be said that the foundation for the real time analysis
+ of energy event data could be laid by an in-memory database.
+ New possibilities which aren't realizable up to date could be made possible.
+ Amongst others, real time pricing based on supply and demand, short-term
+ demand forecasting and the real time visualization of energy consumption
+ for consumers are achievable.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
 \end_inset
 
 
