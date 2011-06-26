@@ -2762,7 +2762,7 @@ S_{\mathrm{value}}(n) & =n\cdot35040\cdot\lceil\log_{2}(100)\rceil\label{eq:spac
 
 \begin_layout Standard
 Nevertheless, the compression rate can be increased drastically by sorting
- and subsequent run length encoding.
+ and subsequent run-length encoding.
  In the abstract, all three columns qualify for a primary sorting.
  The goal is to form as few continuous blocks as possible.
  Sorting the table by the meter id yields 
@@ -2781,9 +2781,9 @@ Nevertheless, the compression rate can be increased drastically by sorting
 \end_inset
 
  when sorting the table by the value column.
- Hence, as run length encoding gets more and more inefficient when the number
+ Hence, as run-length encoding gets more and more inefficient when the number
  of blocks increases, the value column is theoretically best suited for
- a run length encoding.
+ a run-length encoding.
 \end_layout
 
 \begin_layout Standard
@@ -2812,7 +2812,7 @@ However, one has to take into consideration that the domain coded timestamp
 \begin_inset Formula $\mathrm{RLE}(n)$
 \end_inset
 
- the one of a run length encoded column for 
+ the one of a run-length encoded column for 
 \begin_inset Formula $n$
 \end_inset
 
@@ -2915,7 +2915,7 @@ Now that the primary sorting of the table is by timestamp, no more compression
  within the constraints of the primary sorting.
  Since there is a correlation between date and time and energy consumption,
  it can even be assumed that certain values accumulate at a specific date
- and time, which would qualify the column for a further run length encoding.
+ and time, which would qualify the column for a further run-length encoding.
  Since the column contains relatively few distinct values, applying an indirect
  coding and not sorting the column is conceivable as an alternative, too.
  As both scenarios can no longer be mapped reasonably as a function of the
@@ -2956,7 +2956,7 @@ reference "tab:RLE-vs-INDIRECT"
 \end_inset
 
 .
- With 1,912KB compared to 187,101KB, the run length encoded column is almost
+ With 1,912KB compared to 187,101KB, the run-length encoded column is almost
  100 times smaller than the one compressed with indirect coding.
  Consequently, the former is the prefered option for further compressing
  the table.
@@ -2979,7 +2979,7 @@ name "tab:RLE-vs-INDIRECT"
 
 \end_inset
 
-Compression rates and memory consumption of the value column with run length
+Compression rates and memory consumption of the value column with run-length
  encoding and indirect coding
 \end_layout
 
