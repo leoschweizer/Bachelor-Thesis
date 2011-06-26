@@ -7,6 +7,7 @@
 \usepackage{calc}
 \usepackage{graphicx}
 \graphicspath{{.//}}
+\newcommand{\biburl}[2]{\url{#1} (last checked #2)} 
 \end_preamble
 \options final
 \use_default_options true
@@ -493,7 +494,7 @@ on tests, the generated readings should be based on real power consumption
  data.
  Furthermore, the simulation should be aware of single smart meters.
  That means that for a given meter id, reading events should occur in 15
- minute intervals approximately.
+ minute intervals.
  Besides, the unity of all readings of any simulated smart meter should
  form a realistic consumption behaviour over extended periods of time, e.g.
  days, weeks, months and years.
@@ -510,7 +511,7 @@ Implementation
 \end_layout
 
 \begin_layout Standard
-Our simulation of an Advanced Metering Infrastructure has been split up
+The simulation of an Advanced Metering Infrastructure has been split up
  into three components, which are depicted in Fig.
  
 \begin_inset CommandInset ref
@@ -520,7 +521,7 @@ reference "fig:Simulation"
 \end_inset
 
 .
- However, not all parts of the AMI have a counterpart in our simulation.
+ However, not all parts of the AMI have a counterpart.
  Namely the Meter Data Unification and Synchronization (MDUS) system is
  missing, since there is no gain in simulating different vendor specific
  protocols and data formats.
@@ -543,7 +544,7 @@ To a greater degree, the database which has to process, to store and to
 \end_layout
 
 \begin_layout Standard
-Thus, the primary target of our simulation is the generation of huge amounts
+Thus, the primary target of the simulation is the generation of huge amounts
  of insert load rather than a realistic representation of the AMI.
  In this way, the limits of an in-memory based central system can be investigate
 d.
@@ -623,14 +624,13 @@ reference "sub:Concentrator"
 ).
  A dedicated, persistent TCP/IP connection is built between the data producer
  and a concentrator for each thread the data producer is spawning.
- Thereby, one thread simulates up to 
+ One thread simulates up to 
 \begin_inset Formula $375,000$
 \end_inset
 
- smart meters.
- Thus, the number of smart meters that can be simulated by a single instance
- is mostly limited by the number of threads the host system is capable to
- handle and the network capacity.
+ smart meters.The number of smart meters that can be simulated by a single
+ instance is mostly limited by the number of threads the host system is
+ capable to handle and the network capacity.
 \end_layout
 
 \begin_layout Standard
@@ -652,7 +652,7 @@ German Energy and Water Association, www.bdew.de
  period of one or more years.
  They consist of counter readings or consumption deltas in 15 minute intervals,
  yielding 35040 values for non-leapyears.
- For reasons depicted in Sect.
+ For the reasons depicted in Sect.
  
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -660,16 +660,15 @@ reference "sub:Compression-of-Energy"
 
 \end_inset
 
-, we prefer consumption deltas over counter readings.
+, consumption deltas are preferred over counter readings.
 \end_layout
 
 \begin_layout Standard
 Based on these two input parameters, readings are generated.
  The initial timestamp is used to calculate the current simulated day and
  time.
- After that, the according consumption value is read from the standard load
- profile.
- A random variance is added to this value 
+ The according consumption value is read from the standard load profile.
+ A uniformly distributed variance is added to this value 
 \begin_inset Formula $v$
 \end_inset
 
@@ -682,8 +681,7 @@ Based on these two input parameters, readings are generated.
 \end_inset
 
 .
- Furthermore, the timestamp of the generated reading is rounded down to
- 15 minute intervals.
+ The timestamp of the generated reading is rounded down to 15 minute intervals.
  For instance, 13:14:55 would be replaced by 13:00:00 (cf.
  
 \begin_inset CommandInset ref
@@ -700,15 +698,15 @@ The third and last component of a reading is the unique integer device id
  by which every simulated smart meter can be identified.
  Each smart meter is associated with one customer, and each customer can
  have an arbitrary number of smart meters.
- However, this mapping information is not part of the table containing the
- meter readings.
+ This mapping information is not part of the table containing the meter
+ readings.
 \end_layout
 
 \begin_layout Standard
 The data producer generates discrete reading events for each of these identifier
 s every 15 minutes and sends them to the assigned concentrator instantly.
- Thereby, the identifiers are spread randomly accross the 15 minute intervall,
- but keep their time slot across multiple intervals as long as the simulation
+ The identifiers are spread randomly accross the 15 minute intervall, but
+ keep their time slot across multiple intervals as long as the simulation
  is running.
  Table 
 \begin_inset CommandInset ref
@@ -717,17 +715,14 @@ reference "tab:Sample-readings"
 
 \end_inset
 
- shows one hour of readings for a given smart meter, starting at Sat, 28
- May 2011 20:00:00 GMT.
- During this hour, the household associated with the smart meter carrying
- the device id 32202775 had a total consumption of 0,143kWh.
+ shows one hour of readings for a given smart meter.
 \end_layout
 
 \begin_layout Standard
-Since we execute the simulation over an ethernet network via TCP/IP, data
- loss is of no concern.
- Thus, the push architecture described here could be favored over the pull
- approach which dominates in real world metering infrastructures.
+Since the simulation is executed over an ethernet network via TCP/IP, data
+ loss is of no concern and the push architecture described here could be
+ favored over the pull approach which dominates in real world metering infrastru
+ctures.
 \end_layout
 
 \begin_layout Standard
@@ -938,8 +933,8 @@ reference "sub:Database-Client"
 
 \end_inset
 
-), thus reducing the number of connections and insert events visible to
- the central database system.
+), reducing the number of connections and insert events visible to the central
+ database system.
 \end_layout
 
 \begin_layout Standard
@@ -954,8 +949,8 @@ reference "sub:Data-Producer"
 \end_inset
 
 ).
- In turn, the concentrator can connect to one or more database clients,
- again via TCP/IP.
+ The concentrator can connect to one or more database clients, again via
+ TCP/IP.
  The primary reason for supporting multiple database clients is the evaluation
  of distributed database systems, which is the subject of another thesis
  
@@ -972,7 +967,7 @@ ons and forwards the readings to the proper destination database instance.
 
 \begin_layout Standard
 The concentrator collects incoming readings until the batch size reaches
- a configurable threshold (default: 60000 readings) or the oldest reading
+ a configurable threshold (default: 100,000 readings) or the oldest reading
  in the batch exceeds a certain age (default: 5 minutes).
  Once this happens, the batch of readings gets converted into a column-wise
  fashion and is sent to the corresponding database client together with
@@ -1064,18 +1059,6 @@ reference "tab:Sample-readings"
 
 \end_layout
 
-\begin_layout Standard
-Due to the reasons outlined in Sect.
- 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sub:Data-Producer"
-
-\end_inset
-
-, the push approach could again be favored over a polling based architecture.
-\end_layout
-
 \begin_layout Subsubsection
 \begin_inset CommandInset label
 LatexCommand label
@@ -1087,18 +1070,9 @@ Database Client
 \end_layout
 
 \begin_layout Standard
-Of the three components depicted in Fig.
- 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:Simulation"
-
-\end_inset
-
-, the database client implements the least logic.
- The main purpose of this component is to expose a specialised interface
+The main purpose of the database client is to expose a specialised interface
  for inserting batches of readings into the in-memory database, the back-end
- of our system.
+ of the simulation system.
 \end_layout
 
 \begin_layout Standard
@@ -1125,19 +1099,19 @@ reference "sec:Acceleration-of-INSERT"
 
 \begin_layout Standard
 Since the database client is intended for running on the same host as the
- database system, it is important to reduce the footprint of the client
- as far as possible.
+ database system, it is important to reduce the footprint of the client.
  For that reason, the client is implemented as C++ native executable and
  connected to the database via ODBC.
- The C++ implementation reduces the main memory consumption from 
-\begin_inset Formula $\approx2\mathrm{GB}$
+ The C++ implementation reduces the main memory consumption from a maximum
+ of 
+\begin_inset Formula $2.2\mathrm{GB}$
 \end_inset
 
  to 
-\begin_inset Formula $<100\mathrm{MB}$
+\begin_inset Formula $110\mathrm{MB}$
 \end_inset
 
- compared to the analog Java implementation.
+ compared to a corresponding Java implementation.
 \end_layout
 
 \begin_layout Subsection
@@ -1185,7 +1159,7 @@ g 25 million smart meters.
  meter readings per second.
  Each concentrator is connected to a dedicated instance of the database
  client which is running on the host of the database HPB and inserting incoming
- readings into an instance of the table READINGS_RLE (cf.
+ readings into an instance of the Table READINGS_RLE (cf.
  Listing 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1363,7 +1337,7 @@ key "java/time"
 
 \begin_layout Standard
 Three different schemas have been used for the measurements.
- The schema READINGS_PK (listing 
+ The schema READINGS_PK (Listing 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "lis:Schema-READINGS_PK"
@@ -1371,8 +1345,8 @@ reference "lis:Schema-READINGS_PK"
 \end_inset
 
 ) constitutes a regular column table with a natural primary key on the columns
- meterid and datetime.
- The schema READINGS_IO_PK (listing 
+ meterid and timestamp.
+ The schema READINGS_IO_PK (Listing 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "lis:Schema-READINGS_IO_PK"
@@ -1381,7 +1355,7 @@ reference "lis:Schema-READINGS_IO_PK"
 
 ) is equivalent to READINGS_PK, except that it represents an insert-only
  column table.
- The third schema is READINGS_IO (listing 
+ The third schema is READINGS_IO (Listing 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "lis:Schema-READINGS_IO"
@@ -1418,8 +1392,8 @@ Schema READINGS_PK
 
 \begin_layout Plain Layout
 
-CREATE COLUMN TABLE readings (meterid INTEGER, datetime INTEGER, value INTEGER,
- PRIMARY KEY (meterid, datetime))
+CREATE COLUMN TABLE readings (meterid INTEGER, timestamp INTEGER, value
+ INTEGER, PRIMARY KEY (meterid, timestamp))
 \end_layout
 
 \end_inset
@@ -1449,8 +1423,8 @@ Schema READINGS_IO_PK
 
 \end_inset
 
-CREATE INSERT ONLY COLUMN TABLE readings (meterid INTEGER, datetime INTEGER,
- value INTEGER, PRIMARY KEY (meterid, datetime))
+CREATE INSERT ONLY COLUMN TABLE readings (meterid INTEGER, timestamp INTEGER,
+ value INTEGER, PRIMARY KEY (meterid, timestamp))
 \end_layout
 
 \end_inset
@@ -1480,7 +1454,7 @@ Schema READINGS_IO
 
 \end_inset
 
-CREATE INSERT ONLY COLUMN TABLE readings (meterid INTEGER, datetime INTEGER,
+CREATE INSERT ONLY COLUMN TABLE readings (meterid INTEGER, timestamp INTEGER,
  value INTEGER)
 \end_layout
 
@@ -1691,9 +1665,9 @@ The employed database system allows column tables without explicit primary
  key only in the form of socalled insert-only tables.
  As the name already suggests, records can only be added to a insert-only
  table, but neither be updated or deleted.
- These constraints can be accepted in our scenario, since concurrent readings
- could be distinguished by timestamps or valid/invalid-flags and there are
- no reasons for frequent updates.
+ These constraints can be accepted, since concurrent readings could be distingui
+shed by timestamps or valid/invalid-flags and there are no reasons for frequent
+ updates.
  Insert-only tables make use of an implicit row id as primary key which
  is comparable to auto-increment fields.
  While increasing the consumed amount of memory through this additional
@@ -1711,7 +1685,7 @@ To evaluate the costs of explicit keys, batches of 100,000 readings have
 \end_layout
 
 \begin_layout Standard
-The results are depicted in fig.
+The results are depicted in Fig.
  
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1815,8 +1789,8 @@ key "openmeter/requirements"
 \end_layout
 
 \begin_layout Standard
-A column store consists of a read-optimized main store and a write-optimized
- differential buffer.
+The used database system splits up column stores into a read-optimized main
+ store and a write-optimized differential buffer.
  New rows are inserted into the differential buffer and transfered to the
  main store during the socalled merge process 
 \begin_inset CommandInset citation
@@ -1860,8 +1834,10 @@ reference "fig:Logging"
  is disabled.
  In other words, transaction logs slow down the insert process by approximately
  6%.
- Thus, abandoning transaction logs for insertions can be considered doubtful
- for real world applications due to the comparatevely negligible impact.
+ Consequently, abandoning transaction logs for insertions can be considered
+ doubtful for real world applications.
+ The performance gain doesn't compensate the lost ability to recover unmerged
+ readings in the case of a system failure.
 \end_layout
 
 \begin_layout Standard
@@ -1907,7 +1883,7 @@ Parallel Execution of INSERT-Statements
 
 \begin_layout Standard
 In order to allow for a better evaluation of the impact of parallel inserts,
- a bigger dataset of 10,200,000 rows has been inserted into the table READINGS_I
+ a bigger dataset of 10,200,000 rows has been inserted into the Table READINGS_I
 O.
  The time measurement, which begins with the start of the first and ends
  with the return of the last spawned thread has been repeated 1000 times
@@ -2160,7 +2136,7 @@ key "conf/btw/LemkeSF09,Abadi:2006:ICE:1142473.1142548,HPI/PlattnerZ/nHdai,Lemke
  All original values of a column are stored in a sorted dictionary and the
  column itself is represented as index vector consisting of ordinal references
  to this dictionary.
- Thus, a column containing 
+ A column containing 
 \begin_inset Formula $d$
 \end_inset
 
@@ -2309,8 +2285,12 @@ key "conf/btw/LemkeSF09,HPI/PlattnerZ/nHdai,Lemke:2010:SUQ:1881923.1881936"
  index vector.
  In addition, a bit vector is generated which indicates whether a block
  has been compressed or not.
- Therefore, cluster coding is applicable in cases where a column contains
- only few distinct values which form blocks innately.
+ 
+\end_layout
+
+\begin_layout Standard
+Cluster coding is applicable in cases where a column contains only few distinct
+ values which form blocks innately.
  For instance, a column containing the alternating values 1, 2 and 3 would
  be the worst case for cluster coding.
  In the best case, a column with a total of 
@@ -2426,11 +2406,11 @@ Such beeing the case, indirect coding is particularly powerful in columns
 \end_layout
 
 \begin_layout Subsubsection
-Run Length Encoding
+Run-Length Encoding
 \end_layout
 
 \begin_layout Standard
-Run length encoding is a very simple lossless compression algorithm which
+Run-length encoding is a very simple lossless compression algorithm which
  unfolds its full potential in sorted columns.
 \end_layout
 
@@ -2471,7 +2451,7 @@ key "HPI/PlattnerZ/nHdai"
  removed from the index vector.
  Additionally, a second vector is generated.
  It contains the starting index of the index vectors corresponding entry.
- Thus, run length encoding can reduce the size of a 
+ Run-length encoding can reduce the size of a 
 \emph on
 sorted
 \emph default
@@ -2492,8 +2472,8 @@ d\cdot\lceil\log_{2}(d)\rceil+d\cdot\lceil\log_{2}(t)\rceil
 \end_inset
 
  bits.
- Furthermore, searching a given index becomes less complex compared to the
- original algorithm due to the modification mentioned above.
+ Searching a given index becomes less complex compared to the original algorithm
+ due to the modification mentioned above.
  For instance, it can be carried out in logarithmic time by binary search.
 \end_layout
 
@@ -2508,7 +2488,7 @@ Compression of Energy Event Data
 \end_layout
 
 \begin_layout Standard
-With due regard to the available compression techniques outlined in sect.
+With due regard to the available compression techniques outlined in Sect.
  
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -2525,7 +2505,7 @@ reference "sub:Lightweight-Column-Compression"
  potential benefits of common value suppression techniques.
  And in the third place, the readings have to be sorted in such a way that
  contiguous blocks of equal values which are as wide as possible occur.
- As mentioned in sect.
+ As mentioned in Sect.
  
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -2534,7 +2514,7 @@ reference "sub:Data-Producer"
 \end_inset
 
 , the assumed model of meter readings consists of the three columns meter
- id, datetime and value.
+ id, timestamp and value.
 \end_layout
 
 \begin_layout Subsubsection
@@ -2559,18 +2539,16 @@ ers known to the system.
 \end_layout
 
 \begin_layout Standard
-The situation is different with the datetime column.
+The situation is different with the timestamp column.
  In a first approach, timestamps exact to the second have been used, yielding
  
 \begin_inset Formula $365\cdot24\cdot60\cdot60=31,536,000$
 \end_inset
 
  distinct values per year.
- But the necessity to save timestamps in such a high resolution is very
- questionable.
- The most relevant information for energy providers besides the consumption
+ But the relevant information for energy providers besides the consumption
  value is if there is a meter reading for a given time slot or not, and
- this information can be gained with far less accurate timestamps.
+ this information can be gained with less accurate timestamps.
  Even real time analysis scenarios like the calculation of the current consumpti
 on of all customers can be carried out without the need of timestamps exact
  to the second.
@@ -2687,8 +2665,8 @@ Common Values
 \end_layout
 
 \begin_layout Standard
-Since the meter id and datetime column contain values wich are rather distribute
-d uniformly, the only column that could potentially benefit of common value
+Since the meter id and timestamp column contain values wich are rather distribut
+ed uniformly, the only column that could potentially benefit of common value
  suppression techniques is the value column.
  When taking the H0 profile as a basis, it turns out that some values indeed
  occur ten times more often than others.
@@ -2793,7 +2771,7 @@ Nevertheless, the compression rate can be increased drastically by sorting
 \end_inset
 
  blocks with a length of 35040.
- If sorted by the datetime column, the result are 35040 blocks with each
+ If sorted by the timestamp column, the result are 35040 blocks with each
  having a lenght of 
 \begin_inset Formula $n$
 \end_inset
@@ -2810,13 +2788,13 @@ Nevertheless, the compression rate can be increased drastically by sorting
 \end_layout
 
 \begin_layout Standard
-However, one has to take into consideration that the domain coded datetime
+However, one has to take into consideration that the domain coded timestamp
  column requires more space than the domain coded value column, since 
 \begin_inset Formula $\lceil\log_{2}(35040)\rceil>\lceil\log_{2}(100)\rceil$
 \end_inset
 
 .
- In other words, the datetime column consumes 
+ In other words, the timestamp column consumes 
 \begin_inset Formula $9\cdot n$
 \end_inset
 
@@ -2880,8 +2858,8 @@ It turns out that the inequation is only true for
 \begin_inset Formula $n>128$
 \end_inset
 
-, sorting the table by the datetime column has to be prefered.
- The same problem applies to the comparison of the meter id and datetime
+, sorting the table by the timestamp column has to be prefered.
+ The same problem applies to the comparison of the meter id and timestamp
  column.
  Again, the question is which solution is true for
 \end_layout
@@ -2907,7 +2885,7 @@ This time, there is a break-even point at
 \end_inset
 
 .
- Hence, sorting by the datetime column is preferable as soon as more than
+ Hence, sorting by the timestamp column is preferable as soon as more than
  35040 smart meters are in the database.
  Thus, function (
 \begin_inset CommandInset ref
@@ -2931,9 +2909,9 @@ S_{\mathrm{datetime}}(n)=35040\cdot\lceil\log_{2}(35040)\rceil+35040\cdot\lceil\
 \end_layout
 
 \begin_layout Standard
-Now that the primary sorting of the table is by datetime, no more compression
+Now that the primary sorting of the table is by timestamp, no more compression
  techniques can be applied to the meter id column, since the number of distinct
- ids per datetime block equals the length of this block.
+ ids per timestamp block equals the length of this block.
  However, this doesn't apply to the value column, which could be sorted
  within the constraints of the primary sorting.
  Since there is a correlation between date and time and energy consumption,
@@ -2956,7 +2934,7 @@ reference "sub:Estimation-of-Consumption"
 
 \end_inset
 
- have been inserted into the tables shown in listings 
+ have been inserted into the tables shown in Listings 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "lis:Table-READINGS_RLE"
@@ -2971,7 +2949,7 @@ reference "lis:Table-READINGS_INDIRECT"
 \end_inset
 
 .
- The result is depicted in table 
+ The result is depicted in Table 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "tab:RLE-vs-INDIRECT"
@@ -2990,10 +2968,6 @@ reference "tab:RLE-vs-INDIRECT"
 wide false
 sideways false
 status open
-
-\begin_layout Plain Layout
-
-\end_layout
 
 \begin_layout Plain Layout
 \align center
@@ -3144,9 +3118,9 @@ Table READINGS_RLE
 
 \end_inset
 
-CREATE INSERT ONLY COLUMN TABLE readings (meterid INTEGER, datetime INTEGER,
- value INTEGER) WITH PARAMETERS ('COMPRESSION' = ('DATETIME', 'RLE'), 'COMPRESSI
-ON' = ('VALUE', 'RLE'))
+CREATE INSERT ONLY COLUMN TABLE readings (meterid INTEGER, timestamp INTEGER,
+ value INTEGER) WITH PARAMETERS ('COMPRESSION' = ('TIMESTAMP', 'RLE'), 'COMPRESS
+ION' = ('VALUE', 'RLE'))
 \end_layout
 
 \end_inset
@@ -3176,9 +3150,9 @@ Table READINGS_INDIRECT
 
 \end_inset
 
-CREATE INSERT ONLY COLUMN TABLE readings (meterid INTEGER, datetime INTEGER,
- value INTEGER) WITH PARAMETERS ('COMPRESSION' = ('DATETIME', 'RLE'), 'COMPRESSI
-ON' = ('VALUE', 'INDIRECT'))
+CREATE INSERT ONLY COLUMN TABLE readings (meterid INTEGER, timestamp INTEGER,
+ value INTEGER) WITH PARAMETERS ('COMPRESSION' = ('TIMESTAMP', 'RLE'), 'COMPRESS
+ION' = ('VALUE', 'INDIRECT'))
 \end_layout
 
 \end_inset
@@ -3273,7 +3247,7 @@ To estimate the main memory consumption of large customer bases, profiles
 \begin_inset Formula $v$
 \end_inset
 
- from the H0 profile randomly such that 
+ from the H0 profile with a uniformly distributed variance such that 
 \begin_inset Formula $0\leq v-v\cdot0,20\leq r_{\mathrm{v}}\leq v+v\cdot0,20$
 \end_inset
 
@@ -3403,7 +3377,7 @@ Estimation for the Table READINGS_RLE
 
 \begin_layout Standard
 The memory footprint of the table READINGS_RLE, which applies a run-length
- encoding to the timestamp and value columns, is depicted in table 
+ encoding to the timestamp and value columns, is depicted in Table 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "tab:Footprint-RLE"
@@ -3538,7 +3512,7 @@ S_{\mathrm{csv}}(n)=n\cdot35040\cdot15\cdot8+{\displaystyle \sum_{k=2}^{n+1}}\lc
 
 \begin_layout Standard
 A comparison of the three storage modes domain coded table, run-length compresse
-d table and disk storage in CSV format is given in table 
+d table and disk storage in CSV format is given in Table 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "tab:footprint-estimation"
@@ -3584,6 +3558,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Caption
 
 \begin_layout Plain Layout
@@ -3603,10 +3578,6 @@ Memory footprint of table READINGS_IO for a number of smart meters
 \end_inset
 
 
-\end_layout
-
-\begin_layout Plain Layout
-\align center
 \begin_inset Tabular
 <lyxtabular version="3" rows="6" columns="6">
 <features tabularvalignment="middle" tabularwidth="80col%">
@@ -4085,10 +4056,6 @@ Memory footprint of table READINGS_RLE for a number of smart meters
 \end_inset
 
 
-\end_layout
-
-\begin_layout Plain Layout
-\align center
 \begin_inset Tabular
 <lyxtabular version="3" rows="6" columns="6">
 <features tabularvalignment="middle" tabularwidth="80col%">
@@ -4543,6 +4510,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Caption
 
 \begin_layout Plain Layout
@@ -4559,10 +4527,6 @@ Estimated space requirements of profiles containing one year of meter readings,
 \end_inset
 
 
-\end_layout
-
-\begin_layout Plain Layout
-\align center
 \begin_inset Tabular
 <lyxtabular version="3" rows="5" columns="4">
 <features tabularvalignment="middle" tabularwidth="80col%">
@@ -4584,7 +4548,7 @@ Profiles
 \begin_inset Text
 
 \begin_layout Plain Layout
-Size on Disk
+Size on disk
 \end_layout
 
 \end_inset
@@ -4881,7 +4845,7 @@ reference "fig:merge-comparison"
 
 .
  In contrast to the assumption, it shows clearly that a run-length encoding
- on the columns datetime and value doesn't have a relevant impact on the
+ on the columns timestamp and value doesn't have a relevant impact on the
  merge process.
  One possible reason for this behaviour is that the compression overhead
  is compensated by the reduced data volume, which leads to a higher cache
