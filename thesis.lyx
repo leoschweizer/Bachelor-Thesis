@@ -247,18 +247,20 @@ Hasso Plattner Institute
 In the course of the ongoing implementation of smart metering in Germany,
  residential customers alone will produce roughly 1.4 trillion records per
  year through their power meters.
- In other words, energy providers will have to deal with 1.4GB of raw data
+ In other words, energy providers will have to deal with 1.8GB of raw data
  every 15 minutes, which is the default measurement interval of modern metering
  devices.
  The processing of continuous data streams of this dimension is a big challenge
  today and traditional OLAP systems aren't capable of analysing this huge
  amount of data in real-time.
- Thus, energy event data is sent to the providers at most once per day and
+ Thus, meter readings are sent to the providers at most once per day and
  analytical possibilities remain unused.
- By chosing an in-memory database as storage the data can be processed and
- analyzed simultaneously while notably reducing the amount of required space
- at the same time through the utilization of compression potentials in column-ba
-sed tables.
+ This thesis describes an approach to the real-time processing of energy
+ event data.
+ By chosing an in-memory database as storage it can be processed and analyzed
+ simultaneously while notably reducing the amount of required space at the
+ same time through the utilization of compression potentials in column-based
+ tables.
  As a result, new opportunities arise, like offering electricity rates with
  real-time pricing or managing supply and demand based on up-to-the-minute
  analytics.
@@ -553,10 +555,10 @@ d.
 \end_layout
 
 \begin_layout Standard
-In the following, the data producer, which constitutes the smart metering
- component of the AMI, the concentrator, which embodies the event aggregation
- component and the database client, which represents the interface of the
- industry-specific enterprise application are described in detail.
+In the following, the data producer constituting the smart metering component
+ of the AMI, the concentrator, which embodies the event aggregation component
+ and the database client as representation of the interface of the industry-spec
+ific enterprise application are described in detail.
 \end_layout
 
 \begin_layout Standard
@@ -598,29 +600,13 @@ Components of the AMI simulation
 \end_layout
 
 \begin_layout Subsubsection
-\begin_inset CommandInset label
-LatexCommand label
-name "sub:Data-Producer"
-
-\end_inset
-
 Data Producer
 \end_layout
 
 \begin_layout Standard
 An instance of the data producer, which is implemented as Java executable,
  represents any number of smart meters.
- One instance of the data producer can connect to exactly one concentrator
- (cf.
- Sect.
- 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sub:Concentrator"
-
-\end_inset
-
-).
+ One instance of the data producer can connect to exactly one concentrator.
  A dedicated, persistent TCP/IP connection is built between the data producer
  and a concentrator for each thread the data producer is spawning.
  One thread simulates up to 375,000 smart meters.The number of smart meters
@@ -907,43 +893,19 @@ Value [Wh]
 \end_layout
 
 \begin_layout Subsubsection
-\begin_inset CommandInset label
-LatexCommand label
-name "sub:Concentrator"
-
-\end_inset
-
 Concentrator
 \end_layout
 
 \begin_layout Standard
 Just like the data producer, the concentrator is implemented as Java executable.
  Its purpose is to aggregate events and to forward these aggregated batches
- to a database client (cf.
- Sect.
- 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sub:Database-Client"
-
-\end_inset
-
-), reducing the number of connections and insert events visible to the central
- database system.
+ to a database client, reducing the number of connections and insert events
+ visible to the central database system.
 \end_layout
 
 \begin_layout Standard
 A concentrator accepts any number of TCP/IP connections from any number
- of data producers (cf.
- Sect.
- 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sub:Data-Producer"
-
-\end_inset
-
-).
+ of data producers.
  The concentrator can connect to one or more database clients, again via
  TCP/IP.
  The primary reason for supporting multiple database clients is the evaluation
@@ -1055,12 +1017,6 @@ reference "tab:Sample-readings"
 \end_layout
 
 \begin_layout Subsubsection
-\begin_inset CommandInset label
-LatexCommand label
-name "sub:Database-Client"
-
-\end_inset
-
 Database Client
 \end_layout
 
@@ -1190,13 +1146,10 @@ For the purpose of planning security, a smooth ressource utilization is
 \begin_layout Standard
 The CPU load of this configuration varies between 30% and 110%.
  This leaves enough ressources for the simultaneous execution of analytical
- queries which is investigated in another thesis
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Literaturverweis
-\end_layout
+ queries which is investigated in another thesis 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "steffen"
 
 \end_inset
 
@@ -1470,6 +1423,9 @@ K by generating a new statement for each reading.
  When repeating the measurement using a prepared statement, the average
  insert time gets reduced to 51.974 seconds (standard deviation: 365ms),
  which is equivalent to a speed-up of almost 80%.
+ With relation to the clear difference, the relatively small number of measureme
+nt iterations and the high standard deviation are still sufficient to emphasize
+ the statement.
 \end_layout
 
 \begin_layout Standard
@@ -2460,7 +2416,7 @@ reference "sub:Lightweight-Column-Compression"
  
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:Data-Producer"
+reference "sub:AMI-Implementation"
 
 \end_inset
 
@@ -2512,6 +2468,10 @@ Hence, it is acceptable to reduce the resolution of the saved timestamps
  to the one of the measurement interval.
  This means that the timestamps can be rounded down to 15 minute intervals.
  For example, 08:21:30 can be replaced by 08:15:00.
+ One could as well save sequences instead of such timestamps, e.g.
+ as ordinal reference to the quarter of an hour slot of a day, but since
+ domain coding has exactly this effect, the additional logic doesn't have
+ to be implemented manually.
  This strategy yields 
 \begin_inset Formula $365\cdot24\cdot4=35,040$
 \end_inset
@@ -3066,7 +3026,7 @@ name "lis:Table-READINGS_RLE"
 
 \end_inset
 
-Table READINGS_RLE
+Schema READINGS_RLE
 \end_layout
 
 \end_inset
@@ -3098,7 +3058,7 @@ name "lis:Table-READINGS_INDIRECT"
 
 \end_inset
 
-Table READINGS_INDIRECT
+Schema READINGS_INDIRECT
 \end_layout
 
 \end_inset
@@ -4913,10 +4873,29 @@ e.
 \begin_layout Standard
 In conclusion, it can be said that the foundation for the real time analysis
  of energy event data could be laid by an in-memory database.
- New possibilities which aren't realizable up to date could be made possible.
- Amongst others, real time pricing based on supply and demand, short-term
- demand forecasting and the real time visualization of energy consumption
- for consumers are achievable.
+ New possibilities which aren't realizable up to date arise.
+ Amongst others, real time pricing based on supply and demand 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "oli"
+
+\end_inset
+
+, short-term demand forecasting 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "julian"
+
+\end_inset
+
+ and the real time visualization of energy consumption for consumers 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "romano"
+
+\end_inset
+
+ are feasible.
 \end_layout
 
 \begin_layout Standard
