@@ -414,12 +414,12 @@ e the meter readings before forwarding them to the utility companies.
 \end_layout
 
 \begin_layout Standard
-Since standardisation is not well advanced in the field of smart metering,
+Since standardization is not well advanced in the field of smart metering,
  it is safe to assume that smart meters from different manufacturers will
  use different data formats.
- Therefore, socalled Meter Data Unification and Synchronization (MDUS) systems
- are introduced in order to harmonize the different protocols of different
- vendors.
+ Therefore, so-called Meter Data Unification and Synchronization (MDUS)
+ systems are introduced in order to harmonize the different protocols of
+ different vendors.
 \end_layout
 
 \begin_layout Standard
@@ -623,13 +623,9 @@ reference "sub:Concentrator"
 ).
  A dedicated, persistent TCP/IP connection is built between the data producer
  and a concentrator for each thread the data producer is spawning.
- One thread simulates up to 
-\begin_inset Formula $375,000$
-\end_inset
-
- smart meters.The number of smart meters that can be simulated by a single
- instance is mostly limited by the number of threads the host system is
- capable to handle and the network capacity.
+ One thread simulates up to 375,000 smart meters.The number of smart meters
+ that can be simulated by a single instance is mostly limited by the number
+ of threads the host system is capable to handle and the network capacity.
 \end_layout
 
 \begin_layout Standard
@@ -1102,15 +1098,7 @@ Since the database client is intended for running on the same host as the
  For that reason, the client is implemented as C++ native executable and
  connected to the database via ODBC.
  The C++ implementation reduces the main memory consumption from a maximum
- of 
-\begin_inset Formula $2.2\mathrm{GB}$
-\end_inset
-
- to 
-\begin_inset Formula $110\mathrm{MB}$
-\end_inset
-
- compared to a corresponding Java implementation.
+ of 2.2GB to 110MB compared to a corresponding Java implementation.
 \end_layout
 
 \begin_layout Subsection
@@ -1138,7 +1126,7 @@ key "DestatisHouseholds,DestatisCompanies"
  meters is assumed to be around 60 million for non-residential customers.
  Thus, a total of 100 million smart meters can be expected after a nationwide
  rollout of smart meters in Germany.
- For that reason, the primary gaol of the simulation is to generate the
+ For that reason, the primary goal of the simulation is to generate the
  load of 100 million smart meters which send meter readings in 15 minute
  intervals.
 \end_layout
@@ -1151,11 +1139,8 @@ g 25 million smart meters.
  The data producer is connected to exactly one concentrator which is running
  on the same host.
  Since the simulated smart meters are distributed uniformly accross the
- 15 minute interval, each concentrator receives roughly 
-\begin_inset Formula $28,000$
-\end_inset
-
- meter readings per second.
+ 15 minute interval, each concentrator receives roughly 28,000 meter readings
+ per second.
  Each concentrator is connected to a dedicated instance of the database
  client which is running on the host of the database HPB and inserting incoming
  readings into an instance of the Table READINGS_RLE (cf.
@@ -1176,18 +1161,11 @@ The frequency of incoming data events is dependent on the batch size of
  Lower batch sizes lead to a smooth CPU workload on the database system
  but result in a higher overhead due to the increased number of executed
  INSERT statements.
- When using 
-\begin_inset Formula $10,000$
-\end_inset
-
- as batch size, every concentrator forwards data more than twice per second.
+ When using 10,000 as batch size, every concentrator forwards data more
+ than twice per second.
  The result is a constant CPU utilization of 40%-80% through the database.
- In contrast, a batch size of 
-\begin_inset Formula $1,000,000$
-\end_inset
-
- leads to peaks of 170% when data packets are received from a concentrator
- every 36 seconds.
+ In contrast, a batch size of 1,000,000 leads to peaks of 170% when data
+ packets are received from a concentrator every 36 seconds.
  During this interval, there is no CPU load caused by the insertion of new
  readings.
  In both cases, the CPU load increases up to 300% during executions of the
@@ -1200,14 +1178,10 @@ For the purpose of planning security, a smooth ressource utilization is
  the preferable option.
  With regard to the optimization of insert performance, the highest possible
  batch size is the first choice.
- As real time analyses only make sense if the latest data is added to the
+ As real time analysis only makes sense if the latest data is added to the
  database in real time, the maximum turnaround time of meter readings is
  another constraint when chosing the best batch size.
- As trade-off of all this considerations, a batch size of 
-\begin_inset Formula $100,000$
-\end_inset
-
- is chosen.
+ As trade-off of all this considerations, a batch size of 100,000 is chosen.
  That means that a new meter reading will be transported to the database
  system in under four seconds.
  
@@ -1216,7 +1190,7 @@ For the purpose of planning security, a smooth ressource utilization is
 \begin_layout Standard
 The CPU load of this configuration varies between 30% and 110%.
  This leaves enough ressources for the simultaneous execution of analytical
- queries which are investigated in another thesis
+ queries which is investigated in another thesis
 \begin_inset Note Note
 status open
 
@@ -1227,13 +1201,10 @@ Literaturverweis
 \end_inset
 
 .
- The average execution time after 1000 inserts averages 410ms in this scenario.
- That means that the target insert rate of 
-\begin_inset Formula $112,000$
-\end_inset
-
- readings per second which is required to process the 100 million smart
- meters could be outperformed considerably.
+ The execution time after 1000 inserts averages 410ms in this scenario.
+ That means that the target insert rate of 112,000 readings per second which
+ is required to process the 100 million smart meters could be outperformed
+ considerably.
  It is important to note that this time measurement is even falsified by
  a deficient implementation of the merge process (cf.
  
@@ -1661,7 +1632,7 @@ key "HPI/GrundKTZ/CeFda"
 
 \begin_layout Standard
 The employed database system allows column tables without explicit primary
- key only in the form of socalled insert-only tables.
+ key only in the form of so-called insert-only tables.
  As the name already suggests, records can only be added to a insert-only
  table, but neither be updated or deleted.
  These constraints can be accepted, since concurrent readings could be distingui
@@ -1791,7 +1762,7 @@ key "openmeter/requirements"
 The used database system splits up column stores into a read-optimized main
  store and a write-optimized differential buffer.
  New rows are inserted into the differential buffer and transfered to the
- main store during the socalled merge process 
+ main store during the so-called merge process 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "DBLP:conf/dasfaa/KrugerGTPZF10,HPI/GrundKPWZ/BmGOI"
@@ -1925,15 +1896,8 @@ reference "fig:parallelisation"
 \end_inset
 
 .
- The insert time using one thread averages 
-\begin_inset Formula $29.935$
-\end_inset
-
- seconds, with a standard deviation of 
-\begin_inset Formula $547\mathrm{ms}$
-\end_inset
-
-.
+ The insert time using one thread averages 29.935 seconds, with a standard
+ deviation of 547ms.
  Based on this value, the theoretical optimum behaviour is plotted as 
 \begin_inset Formula $\frac{v_{t-1}}{2}$
 \end_inset
@@ -1948,20 +1912,9 @@ reference "fig:parallelisation"
 
  of the preceding number of threads.
  In theory and without considering the overhead of multithreading, the insert
- process should take roughly 
-\begin_inset Formula $2.5$
-\end_inset
-
- seconds when using 12 threads provided that it can be parallelized completely.
- The actual value is 
-\begin_inset Formula $4.248$
-\end_inset
-
- seconds (standard deviation: 
-\begin_inset Formula $168\mathrm{ms}$
-\end_inset
-
-).
+ process should take roughly 2.5 seconds when using 12 threads provided that
+ it can be parallelized completely.
+ The actual value is 4.248 seconds (standard deviation: 168ms).
  Considering the fact that database overhead like the increased commit number
  and the system overhead of multithreading is induced, it can be said that
  the insert time scales almost perfectly with the number of threads and
@@ -2135,7 +2088,14 @@ key "conf/btw/LemkeSF09,Abadi:2006:ICE:1142473.1142548,HPI/PlattnerZ/nHdai,Lemke
  All original values of a column are stored in a sorted dictionary and the
  column itself is represented as index vector consisting of ordinal references
  to this dictionary.
- A column containing 
+ According to 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "conf/btw/LemkeSF09"
+
+\end_inset
+
+, the memory footprint (in bits) of a domain coded column containing 
 \begin_inset Formula $d$
 \end_inset
 
@@ -2143,7 +2103,15 @@ key "conf/btw/LemkeSF09,Abadi:2006:ICE:1142473.1142548,HPI/PlattnerZ/nHdai,Lemke
 \begin_inset Formula $t$
 \end_inset
 
- values can be represented with 
+ values can be calculated by formula 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:domain-coding"
+
+\end_inset
+
+.
+ 
 \begin_inset Formula 
 \begin{equation}
 t\cdot\lceil\log_{2}(d)\rceil\label{eq:domain-coding}
@@ -2155,8 +2123,7 @@ t\cdot\lceil\log_{2}(d)\rceil\label{eq:domain-coding}
 \end_layout
 
 \begin_layout Standard
-bits optimally.
- The size of the dictionary itself has to be added to the total amount of
+The size of the dictionary itself has to be added to the total amount of
  required main memory, which carries weight especially when the record set
  contains a high percentage of distinct values.
  
@@ -2188,7 +2155,17 @@ key "conf/btw/LemkeSF09,HPI/PlattnerZ/nHdai,Lemke:2010:SUQ:1881923.1881936"
  The prefix of equal values is then removed from the index vector completely.
  The prefix value and the number of occurrences are saved separately, each
  with a consumption of 32 bits.
- A column with a total of 
+ Lemke et.
+ al.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "conf/btw/LemkeSF09"
+
+\end_inset
+
+ have shown that the space requirements (in bits) of a prefix coded column
+ with a total of 
 \begin_inset Formula $t$
 \end_inset
 
@@ -2200,19 +2177,23 @@ key "conf/btw/LemkeSF09,HPI/PlattnerZ/nHdai,Lemke:2010:SUQ:1881923.1881936"
 \begin_inset Formula $p$
 \end_inset
 
- elements thus can be compressed to 
+ elements thus can be calculated by formula 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:prefix"
+
+\end_inset
+
+.
+ 
 \begin_inset Formula 
 \begin{equation}
-(t-p)\cdot\lceil\log_{2}(d)\rceil+64
+(t-p)\cdot\lceil\log_{2}(d)\rceil+64\label{eq:prefix}
 \end{equation}
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-bits.
 \end_layout
 
 \begin_layout Subsubsection
@@ -2230,32 +2211,43 @@ key "conf/btw/LemkeSF09,HPI/PlattnerZ/nHdai,Lemke:2010:SUQ:1881923.1881936"
 
  can be used to reduce the size of this column.
  In doing so, all occurences of the value are removed from the index vector
- and this socalled sparse value is saved once as reference into the dictionary,
+ and this so-called sparse value is saved once as reference into the dictionary,
  consuming 32 bits.
  A bit vector is generated for the column, indicating whether the value
  corresponding to the element at the given index equals the sparse value
  or not.
  In addition, a prefix coding is applied to this bit vector.
- Thus, sparse compression reduces the size of a column with 
+ According to 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "conf/btw/LemkeSF09"
+
+\end_inset
+
+, sparse compression reduces the size of a column with 
 \begin_inset Formula $s$
 \end_inset
 
- occurences of the sparse value to
+ occurences of the sparse value to the number of bits deduced from formula
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:sparse"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-(t-s)\cdot\lceil\log_{2}(d)\rceil+(t-p)+32
+(t-s)\cdot\lceil\log_{2}(d)\rceil+(t-p)+32\label{eq:sparse}
 \end{equation}
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-bits.
 \end_layout
 
 \begin_layout Standard
@@ -2292,7 +2284,8 @@ Cluster coding is applicable in cases where a column contains only few distinct
  values which form blocks innately.
  For instance, a column containing the alternating values 1, 2 and 3 would
  be the worst case for cluster coding.
- In the best case, a column with a total of 
+ To calculate the memory footprint (in bits) of a cluster coded column with
+ a total of 
 \begin_inset Formula $t$
 \end_inset
 
@@ -2300,15 +2293,14 @@ Cluster coding is applicable in cases where a column contains only few distinct
 \begin_inset Formula $d$
 \end_inset
 
- distinct values could be compressed to 
-\begin_inset Formula 
-\begin{equation}
-\frac{t}{b}\cdot\lceil\log_{2}(d)\rceil+\frac{t}{b}
-\end{equation}
+ distinct values, formula 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:cluster"
 
 \end_inset
 
-bits, where 
+ has been deduced (where 
 \begin_inset Formula $b$
 \end_inset
 
@@ -2316,46 +2308,12 @@ bits, where
 \begin_inset Formula $b\mid t$
 \end_inset
 
-.
-\end_layout
-
-\begin_layout Standard
-To retrieve the value of a given index 
-\begin_inset Formula $i$
-\end_inset
-
-, the corresponding block has to be determined first by calculating 
-\begin_inset Formula $\lfloor\frac{i}{b}\rfloor$
-\end_inset
-
-.
- The actual position within the index vector then can be determined by calculati
-ng 
-\begin_inset Formula $i-c\cdot(b-1)$
-\end_inset
-
-,
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Corner Cases überprüfen!
-\end_layout
-
-\end_inset
-
- where 
-\begin_inset Formula $c$
-\end_inset
-
- is the number of set bits in the bit vector up to the corresponding block.
+).
  
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Komplizierte Erklärung
-\end_layout
+\begin_inset Formula 
+\begin{equation}
+\frac{t}{b}\cdot\lceil\log_{2}(d)\rceil+\frac{t}{b}\label{eq:cluster}
+\end{equation}
 
 \end_inset
 
@@ -2387,19 +2345,6 @@ n between the actual value stored in the global dictionary and the bit vector
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Datenstrukturen, Dekodierung?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 Such beeing the case, indirect coding is particularly powerful in columns
  which contain blocks with few distinct values.
 \end_layout
@@ -2421,7 +2366,7 @@ key "Golomb66"
 
 \end_inset
 
-, sequences of a value (socalled 
+, sequences of a value (so-called 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2450,7 +2395,14 @@ key "HPI/PlattnerZ/nHdai"
  removed from the index vector.
  Additionally, a second vector is generated.
  It contains the starting index of the index vectors corresponding entry.
- Run-length encoding can reduce the size of a 
+ Formula 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:run-length"
+
+\end_inset
+
+ has been deduced to calculate the size (in bits) of a 
 \emph on
 sorted
 \emph default
@@ -2462,16 +2414,16 @@ sorted
 \begin_inset Formula $d$
 \end_inset
 
- distinct values to 
+ distinct values which is compressed by run-length encoding.
+ 
 \begin_inset Formula 
 \begin{equation}
-d\cdot\lceil\log_{2}(d)\rceil+d\cdot\lceil\log_{2}(t)\rceil
+d\cdot\lceil\log_{2}(d)\rceil+d\cdot\lceil\log_{2}(t)\rceil\label{eq:run-length}
 \end{equation}
 
 \end_inset
 
- bits.
- Searching a given index becomes less complex compared to the original algorithm
+Searching a given index becomes less complex compared to the original algorithm
  due to the modification mentioned above.
  For instance, it can be carried out in logarithmic time by binary search.
 \end_layout
@@ -2527,7 +2479,7 @@ When investigating the necessary number of distinct values, the meter id
 ers known to the system.
  Furthermore, the specific characteristics aren't an issue due to dictionary
  compression, so the natural implementation as integer in the interval 
-\begin_inset Formula $[1,n[$
+\begin_inset Formula $[1,n]$
 \end_inset
 
  can be chosen, where 
@@ -2956,6 +2908,8 @@ reference "tab:RLE-vs-INDIRECT"
 \end_inset
 
 .
+ The compression rate is based on the unmerged size of the column which
+ is 321,482KB.
  With 1,912KB compared to 187,101KB, the run-length encoded column is almost
  100 times smaller than the one compressed with indirect coding.
  Consequently, the former is the prefered option for further compressing
@@ -3035,7 +2989,7 @@ READINGS_RLE
 \begin_inset Text
 
 \begin_layout Plain Layout
-99.9%
+99.6%
 \end_layout
 
 \end_inset
@@ -3064,7 +3018,7 @@ READINGS_INDIRECT
 \begin_inset Text
 
 \begin_layout Plain Layout
-86.3%
+41.8%
 \end_layout
 
 \end_inset
@@ -3542,12 +3496,9 @@ reference "eq:CSV-size"
 \end_inset
 
 .
- They show that the footprint of 
-\begin_inset Formula $10,000,000$
-\end_inset
-
- profiles can be reduced by roughly 65% compared to a storage on disk when
- making use of column compression potentials in in-memory databases.
+ They show that the footprint of 10,000,000 profiles can be reduced by roughly
+ 65% compared to a storage on disk when making use of column compression
+ potentials in in-memory databases.
 \end_layout
 
 \begin_layout Standard
@@ -4916,30 +4867,12 @@ By simulating the amount of meter readings that will arise when a smart
  metering infrastructure has been established in Germany it could be shown
  that this amount can be processed by an in-memory column store which utilizes
  a write optimized differential buffer.
- The target insert rate of 
-\begin_inset Formula $112,000$
-\end_inset
-
- meter readings per second which corresponds to 
-\begin_inset Formula $100,000,000$
-\end_inset
-
- smart meters could be outperformed significantly with the help of state-of-the-
-art hardware.
- The execution time of the insertion of 
-\begin_inset Formula $100,000$
-\end_inset
-
- readings could be reduced to 
-\begin_inset Formula $170\mathrm{ms}$
-\end_inset
-
- through the utilization of batch insert processing and insert-only tables,
- allowing for at least 
-\begin_inset Formula $500,000$
-\end_inset
-
- inserts per second.
+ The target insert rate of 112,000 meter readings per second which corresponds
+ to 100,000,000 smart meters could be outperformed significantly with the
+ help of state-of-the-art hardware.
+ The execution time of the insertion of 100,000 readings could be reduced
+ to 170ms through the utilization of batch insert processing and insert-only
+ tables, allowing for at least 500,000 inserts per second.
 \end_layout
 
 \begin_layout Standard
@@ -4949,15 +4882,8 @@ To achieve this insert rate, a trade-off between insert time and memory
  to standard column tables since a natural primary key can be omitted.
  However, insert-only tables imply a row id column which can't be compressed
  further besides domain coding.
- This column makes up almost 70% of the total memory footprint of 
-\begin_inset Formula $1.8\mathrm{GB}$
-\end_inset
-
- when storing 
-\begin_inset Formula $10,000$
-\end_inset
-
- one year profiles.
+ This column makes up almost 70% of the total memory footprint of 1.8GB when
+ storing 10,000 one year profiles.
  Thus, it might be preferable to give up the performance gain of insert-only
  tables if smaller customer bases have to be maintained.
 \end_layout
