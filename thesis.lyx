@@ -4,6 +4,7 @@
 \begin_header
 \textclass llncs
 \begin_preamble
+\usepackage[ngerman, english]{babel} 
 \usepackage{calc}
 \usepackage{url}
 \usepackage{graphicx}
@@ -26,7 +27,7 @@
 \use_default_options true
 \maintain_unincluded_children false
 \language english
-\language_package default
+\language_package none
 \inputencoding auto
 \fontencoding global
 \font_roman default
@@ -471,16 +472,14 @@ onehalfspacing
 
 
 \backslash
-thispagestyle{empty}
+selectlanguage{ngerman}
 \end_layout
 
 \begin_layout Plain Layout
 
 
 \backslash
-renewcommand{
-\backslash
-abstractname}{Zusammenfassung.}
+thispagestyle{empty}
 \end_layout
 
 \begin_layout Plain Layout
@@ -498,27 +497,26 @@ fill}
 \end_layout
 
 \begin_layout Abstract
-Im Zuge der Einführung von Smart Metering in Deutschland werden Privatkunden
- allein ca.
- 1.4 Billionen Datensätze jährlich durch ihre Stromzähler erzeugen.
- Mit anderen Worten müssen Energieanbieter entsprechend dem Messintervall
+Im Zuge der Einführung von Smart Metering in Deutschland werden allein Privatkun
+den jährlich ca.
+ 1.4 Billionen Datensätze durch ihre Stromzähler erzeugen.
+ Energieanbieter müssen in anderen Worten entsprechend dem Messintervall
  moderner Zähler viertelstündlich 1.8GB an Rohdaten verarbeiten.
- Die Verarbeitung von kontinuierlichen Datenströmen dieses Ausmaßes stellt
+ Die Verarbeitung von kontinuierlichen Datenströmen dieser Größe stellt
  heutzutage eine große Herausforderung dar und herkömmliche OLAP Systeme
  sind nicht dazu in der Lage, derart große Datenmengen in Echtzeit zu analysiere
 n.
- Aus diesem Grund werden Zählerstände heutzutage höchstens einmal täglich
- an die Energieanbieter gesendet und Analysepotentiale bleiben ungenutzt.
- In dieser Arbeit wird ein Ansatz zur Echtzeitverarbeitung von Energieereignisda
-ten beschrieben.
- Mittels einer Hauptspeicherdatenbank können selbige gleichzeitig erfasst
- und analysiert werden.
- Darüber hinaus wird gezeigt, wie der Speicherplatzbedarf durch die Ausnutzung
- von Kompressionspotentialen in spaltenorientierten Tabellen drastisch gesenkt
- werden kann.
+ Aus diesem Grund werden Zählerstände bisher höchstens einmal täglich an
+ die Energieanbieter gesendet und Analysepotentiale bleiben ungenutzt.
+ In dieser Arbeit wird ein auf Hauptspeicherdatenbanken basierender Ansatz
+ zur Echtzeitverarbeitung von Energieereignisdaten beschrieben.
+ Darüber hinaus wird gezeigt, wie der Speicherplatzbedarf von Energieereignisdat
+en durch die Ausnutzung von Kompressionspotentialen in spaltenorientierten
+ Tabellen drastisch gesenkt werden kann.
  Infolgedessen entstehen ungeahnte Möglichkeiten.
- Beispielsweise können dynamische Tarife angeboten werden, deren Preis sich
- an tatsächlichem Angebot und Nachfrage orientiert.
+ Beispielsweise können Energiedaten in sekundenschnelle analysiert werden
+ und dynamische Tarife, deren Preis sich an Angebot und Nachfrage orientiert,
+ werden ermöglicht.
 \end_layout
 
 \begin_layout Abstract
@@ -554,15 +552,6 @@ status open
 
 
 \backslash
-vspace*{
-\backslash
-fill}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
 thispagestyle{empty}
 \end_layout
 
@@ -570,9 +559,16 @@ thispagestyle{empty}
 
 
 \backslash
-renewcommand{
+selectlanguage{english}
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
-abstractname}{Abstract.}
+vspace*{
+\backslash
+fill}
 \end_layout
 
 \end_inset
@@ -594,7 +590,7 @@ In the course of the ongoing implementation of smart metering in Germany,
  analytical possibilities remain unused.
  This thesis describes an approach to the real-time processing of energy
  event data.
- By chosing an in-memory database as storage it can be processed and analyzed
+ By chosing an in-memory database as storage they can be processed and analyzed
  simultaneously while notably reducing the amount of required space at the
  same time through the utilization of compression potentials in column-based
  tables.
@@ -675,7 +671,7 @@ key "journals/dbsk/KrugerGTEZP10"
 \end_inset
 
 .
- On the one hand, there are write-optimized, row oriented Online Transactional
+ On the one hand, there are write-optimized, row-oriented Online Transactional
  Processing (OLTP) systems, which in return lack in analytical performance.
  On the other hand, there are read-optimized Online Analytical Processing
  (OLAP) systems, which aren't suitable for transactional processing.
@@ -689,7 +685,7 @@ This is one of the reasons why utility companies today aren't capable to
  For instance, the growing importance of renewable and distributed energy
  sources like wind and solar energy as part of the aimed-at energy turnaround
  leads to an increased need of information.
- Despite their unpredictable nature, energy providers will have to provide
+ Despite their unpredictable nature, energy providers will have to offer
  available-to-promise functions.
  While a smart grid will deliver the required data, there are no systems
  that enable the involved parties to gain the information which is neccesary
@@ -712,7 +708,7 @@ key "KOMMISSION_2011"
 \end_inset
 
 .
- But automated meter reading even offers the data to shorten this interval
+ But automated meter reading even offers the data to decrease this interval
  even further, e.g.
  to days or hours.
  Such short billing intervals in turn enable the consumers to change tariffs
@@ -903,11 +899,11 @@ Simulation Requirements
 \begin_layout Standard
 Since the data generated by the simulated smart meters should not only be
  used for stress testing, but also for real-time analyses and visualization,
- various requirements had to be met by the simulation system.
+ various requirements have to be met by the simulation system.
 \end_layout
 
 \begin_layout Standard
-The system had to be capable to simulate at least 100 million smart meters,
+The system has to be capable to simulate at least 100 million smart meters,
  each initiating one reading event per 15 minutes.
  Furthermore, the number of simulated metering devices should be freely
  configurable.
@@ -1037,9 +1033,10 @@ An instance of the data producer, which is implemented as Java executable,
  One instance of the data producer can connect to exactly one concentrator.
  A dedicated, persistent TCP/IP connection is built between the data producer
  and a concentrator for each thread the data producer is spawning.
- One thread simulates up to 375,000 smart meters.The number of smart meters
- that can be simulated by a single instance is mostly limited by the number
- of threads the host system is capable to handle and the network capacity.
+ One thread simulates up to 375,000 smart meters.
+ The number of smart meters that can be simulated by a single instance is
+ mostly limited by the number of threads the host system is capable to handle
+ and the network capacity.
 \end_layout
 
 \begin_layout Standard
@@ -1365,7 +1362,7 @@ reference "fig:Concentrator-Output"
 \end_inset
 
  illustrates this conversion with the aid of the first two records of the
- row based data shown in Table 
+ row-based data shown in Table 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "tab:Sample-readings"
@@ -1373,8 +1370,8 @@ reference "tab:Sample-readings"
 \end_inset
 
 .
- The resulting column based format is very beneficial for inserting data
- into column based tables.
+ The resulting column-based format is very beneficial for inserting data
+ into column-based tables.
 \end_layout
 
 \begin_layout Standard
@@ -1509,7 +1506,7 @@ key "DestatisHouseholds,DestatisCompanies"
  will be equipped with multiple smart meters, the total number of smart
  meters is assumed to be around 60 million for non-residential customers.
  Thus, a total of 100 million smart meters can be expected after a nationwide
- rollout of smart meters in Germany.
+ rollout in Germany.
  For that reason, the primary goal of the simulation is to generate the
  load of 100 million smart meters which send meter readings in 15 minute
  intervals.
@@ -1527,7 +1524,7 @@ g 25 million smart meters.
  per second.
  Each concentrator is connected to a dedicated instance of the database
  client which is running on the host of the database HPB and inserting incoming
- readings into an instance of the Table READINGS_RLE (cf.
+ readings into an instance of the table READINGS_RLE (cf.
  Listing 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1544,10 +1541,10 @@ The frequency of incoming data events is dependent on the batch size of
  the concentrator.
  Lower batch sizes lead to a smooth CPU workload on the database system
  but result in a higher overhead due to the increased number of executed
- INSERT statements.
+ INSERT-statements.
  When using 10,000 as batch size, every concentrator forwards data more
  than twice per second.
- The result is a constant CPU utilization of 40%-80% through the database.
+ The result is a CPU utilization of 40%-80% through the database.
  In contrast, a batch size of 1,000,000 leads to peaks of 170% when data
  packets are received from a concentrator every 36 seconds.
  During this interval, there is no CPU load caused by the insertion of new
@@ -1558,8 +1555,8 @@ The frequency of incoming data events is dependent on the batch size of
 \end_layout
 
 \begin_layout Standard
-For the purpose of planning security, a smooth ressource utilization is
- the preferable option.
+For the purpose of planning security, a smooth resource utilization is the
+ preferable option.
  With regard to the optimization of insert performance, the highest possible
  batch size is the first choice.
  As real-time analysis only makes sense if the latest data is added to the
@@ -1595,7 +1592,7 @@ reference "sub:Restraining-Disaster-Recovery"
 
 \end_inset
 
-) which blocks pending INSERT statements during a merge although it should
+) which blocks pending INSERT-statements during a merge although it should
  be carried out asynchronously 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -1826,7 +1823,7 @@ Prepared Statements
 
 \begin_layout Standard
 The naive approach to insert multiple rows into a table is to execute single
- insert statements sequentially.
+ INSERT-statements sequentially.
  The problem in doing so is that parsing and the generation of an execution
  plan is carried out again for each statement, although they are equivalent.
  The solution to this issue is the utilization of prepared statements.
@@ -1908,7 +1905,7 @@ Batch Inserts
 \begin_layout Standard
 As an extension of prepared statements, most database interfaces offer a
  possibility to execute batches of the same statement at once.
- The executeBatch method implemented by JDBC 
+ The executeBatch-method implemented by JDBC 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "java/statement"
@@ -2149,7 +2146,7 @@ The used database system splits up column stores into a read-optimized main
  main store during the so-called merge process 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "DBLP:conf/dasfaa/KrugerGTPZF10,HPI/GrundKPWZ/BmGOI"
+key "conf/dasfaa/KrugerGTPZF10,HPI/GrundKPWZ/BmGOI"
 
 \end_inset
 
@@ -2182,7 +2179,7 @@ reference "fig:Logging"
 
 \end_inset
 
- shows the results of this measurements.
+ shows the results of this measurement.
  With activated logging, inserts average 177ms (standard deviation: 18ms).
  The same inserts take averagely 166ms (standard deviation: 16ms) when logging
  is disabled.
@@ -2252,7 +2249,7 @@ O.
 .
  Thereby, the dataset is divided equally to all threads and each thread
  establishes a JDBC connection to the database and executes a single prepared
- insert statement containing 
+ INSERT-statement containing 
 \begin_inset Formula $\frac{10,200,000}{n}$
 \end_inset
 
@@ -2722,8 +2719,8 @@ key "conf/btw/LemkeSF09,HPI/PlattnerZ/nHdai,Lemke:2010:SUQ:1881923.1881936"
 n between the actual value stored in the global dictionary and the bit vector
  pointing to this value from the index vector.
  Sharing dictionaries among subsequent blocks is possible as long as adding
- new values to the dictionary wouldn't increase the size of the bit vector
- representing the key.
+ new values to the dictionary wouldn't increase the size of the bit vectors
+ representing the keys.
  Furthermore, blocks with a high percentage of distinct values still can
  use the global dictionary directly.
 \end_layout
@@ -2770,7 +2767,7 @@ For this reason, the technique used in column stores is slightly different
  
 \begin_inset CommandInset citation
 LatexCommand cite
-key "HPI/PlattnerZ/nHdai"
+key "conf/btw/LemkeSF09,HPI/PlattnerZ/nHdai,Lemke:2010:SUQ:1881923.1881936"
 
 \end_inset
 
@@ -2790,7 +2787,7 @@ reference "eq:run-length"
 \emph on
 sorted
 \emph default
- column containing a total of 
+ run-length compressed column containing a total of 
 \begin_inset Formula $t$
 \end_inset
 
@@ -2798,7 +2795,7 @@ sorted
 \begin_inset Formula $d$
 \end_inset
 
- distinct values which is compressed by run-length encoding.
+ distinct values.
  
 \begin_inset Formula 
 \begin{equation}
@@ -2838,8 +2835,8 @@ reference "sub:Lightweight-Column-Compression"
  of dictionary compression.
  Secondly, the spreading of values has to be analyzed in order to evaluate
  potential benefits of common value suppression techniques.
- And in the third place, the readings have to be sorted in such a way that
- contiguous blocks of equal values which are as wide as possible occur.
+ In the third place, the readings have to be sorted in such a way that contiguou
+s blocks of equal values which are as wide as possible occur.
  As mentioned in Sect.
  
 \begin_inset CommandInset ref
@@ -2898,7 +2895,7 @@ Hence, it is acceptable to reduce the resolution of the saved timestamps
  For example, 08:21:30 can be replaced by 08:15:00.
  One could as well save sequences instead of such timestamps, e.g.
  as ordinal reference to the quarter of an hour slot of a day, but since
- domain coding has exactly this effect, the additional logic doesn't have
+ domain coding has this effect exactly, the additional logic doesn't have
  to be implemented manually.
  This strategy yields 
 \begin_inset Formula $365\cdot24\cdot4=35,040$
@@ -2915,20 +2912,21 @@ reference "tab:Sample-readings"
 
 \end_inset
 
- shows that at least the last two digits of a timestamp are always 
+ shows that the last two digits of a timestamp are always 
 \begin_inset Formula $00$
 \end_inset
 
 , so stripping them would be a reversible operation.
  Through this procedure, 7 bits could be saved per timestamp.
- However, this means savings of no more than roughly 30KB per year since
- every value is saved in the dictionary only once, which isn't profitable.
+ However, since every value is saved in the dictionary only once, this means
+ savings of no more than roughly 30KB per year, which isn't profitable.
 \end_layout
 
 \begin_layout Standard
 The consumption information in the value column can be saved in two ways.
- One possibility is to save counter readings, that means every reading contains
- the total amount of consumed energy since the installation of the meter.
+ One possibility is to save counter readings.
+ That means that every reading contains the total amount of consumed energy
+ since the installation of the meter.
  The other possibility is to save consumption deltas.
  If the counter readings of two subsequent time slots are 
 \begin_inset Formula $v_{t-1}$
@@ -3049,12 +3047,12 @@ y in all columns.
 \end_inset
 
 , with every smart meter having a record set of one year in 15 minute intervals.
- In the following, the memory footprint of the table 
+ In the following, the memory footprint 
 \begin_inset Formula $S_{\mathrm{total}}$
 \end_inset
 
- is analyzed per column, so the total capacity requirements can be calculated
- by
+ of a table is analyzed per column, so the total capacity requirements can
+ be calculated by
 \end_layout
 
 \begin_layout Standard
@@ -3821,7 +3819,7 @@ Comparison to Storage on Disk
 In order to give a comparison of space requirements with disk-based storage,
  the same profiles which were inserted into the database were saved as comma
  separated values in plain text files (ASCII encoded, one byte per character).
- Since the timestamp has a fixed length and the values hava an average of
+ Since the timestamp has a fixed length and the values have an average of
  two digits, each line consists of a fixed part which adds up to 15 bytes,
  including separators and line break.
  The other part is the meter id, whose length varies.
@@ -4895,7 +4893,7 @@ Size on disk
 \begin_inset Text
 
 \begin_layout Plain Layout
-Uncompressed
+READINGS_IO
 \end_layout
 
 \end_inset
@@ -4904,7 +4902,7 @@ Uncompressed
 \begin_inset Text
 
 \begin_layout Plain Layout
-Compressed
+READINGS_RLE
 \end_layout
 
 \end_inset
@@ -5254,7 +5252,7 @@ Conclusion
 By simulating the amount of meter readings that will arise when a smart
  metering infrastructure has been established in Germany it could be shown
  that this amount can be processed by an in-memory column store which utilizes
- a write optimized differential buffer.
+ a write-optimized differential buffer.
  The target insert rate of 112,000 meter readings per second which corresponds
  to 100,000,000 smart meters could be outperformed significantly with the
  help of state-of-the-art hardware.
@@ -5634,7 +5632,7 @@ CPU
 \begin_layout Plain Layout
 
 \size scriptsize
-Intel Core i5 750 @ 2.67GHz
+Intel Core i5 750
 \end_layout
 
 \end_inset
@@ -5830,7 +5828,7 @@ vspace{2.0cm}
  Potsdam, den 30.
  Juni 2011 
 \backslash
-vspace{1.0cm}
+vspace{2.0cm}
 \backslash
 
 \backslash
