@@ -7,7 +7,7 @@
 \usepackage{calc}
 \usepackage{graphicx}
 \graphicspath{{.//}}
-\setcounter{page}{2}
+
 
 \usepackage{fancyhdr}
 \pagestyle{fancyplain}
@@ -104,57 +104,145 @@ begin{titlepage}
 
 
 \backslash
-thispagestyle{empty} 
+thispagestyle{empty}
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
-begin{center} 	
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
-vspace{0.1cm} 	
+vspace{0.1cm}
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
-LARGE 	Bachelor's Thesis
+LARGE Bachelor's Thesis
 \backslash
 
 \backslash
- 	
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
 vspace{0.25cm} 	
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
-Huge 	Optimizing Storage of Energy Event Data in In-Memory Databases
+Huge Optimizing Storage of Energy Event Data in In-Memory Databases
 \backslash
 
 \backslash
- 	
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
-vspace{0.5cm} 	
+vspace{0.5cm}
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
-large 	
+large Optimierte Ablage von Energieereignisdaten in Hauptspeicherdatenbanken
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{0.5cm}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+large
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
 vspace{1.0cm} 	
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
-LARGE 	
+LARGE 
 \backslash
 textbf{Leonhard Schweizer}
 \backslash
 
 \backslash
- 	
+ 
 \backslash
-normalsize   leonhard.schweizer@student.hpi.uni-potsdam.de
+normalsize
+\end_layout
+
+\begin_layout Plain Layout
+
+leonhard.schweizer@student.hpi.uni-potsdam.de
 \backslash
 
 \backslash
- 	
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
-vspace{0.5cm} 	
+vspace{0.5cm}
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
-small 	Hasso Plattner Institute for IT Systems Engineering
+small Hasso Plattner Institute for IT Systems Engineering
 \backslash
 
 \backslash
- 	Enterprise Platform and Integration Concepts Chair
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Enterprise Platform and Integration Concepts Chair
 \backslash
 
 \backslash
- 	
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
 vspace{0.5cm}
 \end_layout
@@ -181,58 +269,133 @@ status open
 
 
 \backslash
-vspace{0.25cm}August-Bebel-Str.
+vspace{0.5cm}
+\end_layout
+
+\begin_layout Plain Layout
+
+August-Bebel-Str.
  88
 \backslash
 
 \backslash
- 	14482 Potsdam, Germany
+ 	
+\end_layout
+
+\begin_layout Plain Layout
+
+14482 Potsdam, Germany
 \backslash
 
 \backslash
  	
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
 url{http://epic.hpi.uni-potsdam.de/}
 \backslash
 
 \backslash
  	
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
-vspace{1.50cm}  Supervisors: 
+vspace{0.5cm}  
+\end_layout
+
+\begin_layout Plain Layout
+
+Supervisors: 
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
 vspace{0.5cm}
 \backslash
 
 \backslash
-  Dr.
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+Dr.
  Alexander Zeier
 \backslash
 
 \backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
 Matthieu-P.
  Schapranow
 \backslash
 
 \backslash
- Christian Schwarz  
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+Christian Schwarz  
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
 vspace{0.5cm}
 \backslash
 
 \backslash
- Hasso Plattner Institute
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+Hasso Plattner Institute
 \backslash
 
 \backslash
- Potsdam, Germany  
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+Potsdam, Germany  
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
-vspace{1.5cm}
+vspace{1.0cm}
 \backslash
 
 \backslash
- June 30th, 2011 
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+June 30th, 2011 
 \backslash
 end{center} 
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
 end{titlepage}
 \end_layout
@@ -242,16 +405,29 @@ end{titlepage}
 
 \end_layout
 
-\begin_layout Title
-Optimizing Storage of Energy Event Data in In-Memory Databases
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+setcounter{page}{1}
 \end_layout
 
-\begin_layout Author
-Leonhard Schweizer
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand{
+\backslash
+abstractname}{Zusammenfassung.}
 \end_layout
 
-\begin_layout Institute
-Hasso Plattner Institute
+\end_inset
+
+
 \end_layout
 
 \begin_layout Abstract
@@ -275,6 +451,58 @@ In the course of the ongoing implementation of smart metering in Germany,
  As a result, new opportunities arise, like offering electricity rates with
  real-time pricing or managing supply and demand based on up-to-the-minute
  analytics.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand{
+\backslash
+abstractname}{Abstract.}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+In the course of the ongoing implementation of smart metering in Germany,
+ residential customers alone will produce roughly 1.4 trillion records per
+ year through their power meters.
+ In other words, energy providers will have to deal with 1.8GB of raw data
+ every 15 minutes, which is the default measurement interval of modern metering
+ devices.
+ The processing of continuous data streams of this dimension is a big challenge
+ today and traditional OLAP systems aren't capable of analysing this huge
+ amount of data in real-time.
+ Thus, meter readings are sent to the providers at most once per day and
+ analytical possibilities remain unused.
+ This thesis describes an approach to the real-time processing of energy
+ event data.
+ By chosing an in-memory database as storage it can be processed and analyzed
+ simultaneously while notably reducing the amount of required space at the
+ same time through the utilization of compression potentials in column-based
+ tables.
+ As a result, new opportunities arise, like offering electricity rates with
+ real-time pricing or managing supply and demand based on up-to-the-minute
+ analytics.
+\begin_inset Newpage pagebreak
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -367,6 +595,10 @@ key "Stonebraker:2005:CCD:1083592.1083658"
  after a Germany-wide implementation of smart metering and how the memory
  footprint of this data can be minimized with the help of lightweight column
  compression techniques with the help of SAPs In-Memory Computing Engine.
+\begin_inset Newpage newpage
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -5383,6 +5615,10 @@ LatexCommand bibtex
 bibfiles "thesis"
 options "C:/Users/Leo/AppData/Roaming/MiKTeX/2.9/tex/latex/lncs/splncs03"
 
+\end_inset
+
+
+\begin_inset Newpage newpage
 \end_inset
 
 
