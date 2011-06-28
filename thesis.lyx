@@ -5,8 +5,11 @@
 \textclass llncs
 \begin_preamble
 \usepackage{calc}
+\usepackage{url}
 \usepackage{graphicx}
 \graphicspath{{.//}}
+
+\usepackage{setspace}
 
 
 \usepackage{fancyhdr}
@@ -92,6 +95,49 @@
 \begin_layout Standard
 \begin_inset ERT
 status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+setcounter{tocdepth}{2} 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+makeatletter 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand*
+\backslash
+l@author[2]{} 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand*
+\backslash
+l@title[2]{} 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+makeatletter
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
 
 \begin_layout Plain Layout
 
@@ -372,7 +418,7 @@ Hasso Plattner Institute
 
 \begin_layout Plain Layout
 
-Potsdam, Germany  
+Potsdam, Germany
 \end_layout
 
 \begin_layout Plain Layout
@@ -388,9 +434,14 @@ vspace{1.0cm}
 
 \begin_layout Plain Layout
 
-June 30th, 2011 
+June 30th, 2011
+\end_layout
+
+\begin_layout Plain Layout
+
+
 \backslash
-end{center} 
+end{center}
 \end_layout
 
 \begin_layout Plain Layout
@@ -413,7 +464,14 @@ status open
 
 
 \backslash
-setcounter{page}{1}
+onehalfspacing
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{empty}
 \end_layout
 
 \begin_layout Plain Layout
@@ -425,32 +483,60 @@ renewcommand{
 abstractname}{Zusammenfassung.}
 \end_layout
 
+\begin_layout Plain Layout
+
+
+\backslash
+vspace*{
+\backslash
+fill}
+\end_layout
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Abstract
-In the course of the ongoing implementation of smart metering in Germany,
- residential customers alone will produce roughly 1.4 trillion records per
- year through their power meters.
- In other words, energy providers will have to deal with 1.8GB of raw data
- every 15 minutes, which is the default measurement interval of modern metering
- devices.
- The processing of continuous data streams of this dimension is a big challenge
- today and traditional OLAP systems aren't capable of analysing this huge
- amount of data in real-time.
- Thus, meter readings are sent to the providers at most once per day and
- analytical possibilities remain unused.
- This thesis describes an approach to the real-time processing of energy
- event data.
- By chosing an in-memory database as storage it can be processed and analyzed
- simultaneously while notably reducing the amount of required space at the
- same time through the utilization of compression potentials in column-based
- tables.
- As a result, new opportunities arise, like offering electricity rates with
- real-time pricing or managing supply and demand based on up-to-the-minute
- analytics.
+Im Zuge der Einführung von Smart Metering in Deutschland werden Privatkunden
+ allein ca.
+ 1.4 Billionen Datensätze jährlich durch ihre Stromzähler erzeugen.
+ Mit anderen Worten müssen Energieanbieter entsprechend dem Messintervall
+ moderner Zähler viertelstündlich 1.8GB an Rohdaten verarbeiten.
+ Die Verarbeitung von kontinuierlichen Datenströmen dieses Ausmaßes stellt
+ heutzutage eine große Herausforderung dar und herkömmliche OLAP Systeme
+ sind nicht dazu in der Lage, derart große Datenmengen in Echtzeit zu analysiere
+n.
+ Aus diesem Grund werden Zählerstände heutzutage höchstens einmal täglich
+ an die Energieanbieter gesendet und Analysepotentiale bleiben ungenutzt.
+ In dieser Arbeit wird ein Ansatz zur Echtzeitverarbeitung von Energieereignisda
+ten beschrieben.
+ Mittels einer Hauptspeicherdatenbank können selbige gleichzeitig erfasst
+ und analysiert werden.
+ Darüber hinaus wird gezeigt, wie der Speicherplatzbedarf durch die Ausnutzung
+ von Kompressionspotentialen in spaltenorientierten Tabellen drastisch gesenkt
+ werden kann.
+ Infolgedessen entstehen ungeahnte Möglichkeiten.
+ Beispielsweise können dynamische Tarife angeboten werden, deren Preis sich
+ an tatsächlichem Angebot und Nachfrage orientiert.
+\end_layout
+
+\begin_layout Abstract
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace*{
+\backslash
+fill}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -463,6 +549,22 @@ In the course of the ongoing implementation of smart metering in Germany,
 \begin_layout Standard
 \begin_inset ERT
 status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace*{
+\backslash
+fill}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{empty}
+\end_layout
 
 \begin_layout Plain Layout
 
@@ -499,7 +601,61 @@ In the course of the ongoing implementation of smart metering in Germany,
  As a result, new opportunities arise, like offering electricity rates with
  real-time pricing or managing supply and demand based on up-to-the-minute
  analytics.
-\begin_inset Newpage pagebreak
+\end_layout
+
+\begin_layout Abstract
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace*{
+\backslash
+fill}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pagestyle{fancyplain}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+setcounter{page}{5}
+\end_layout
+
 \end_inset
 
 
@@ -520,7 +676,7 @@ key "journals/dbsk/KrugerGTEZP10"
 
 .
  On the one hand, there are write-optimized, row oriented Online Transactional
- Processing (OLTP) systems, which in return lack analytical performance.
+ Processing (OLTP) systems, which in return lack in analytical performance.
  On the other hand, there are read-optimized Online Analytical Processing
  (OLAP) systems, which aren't suitable for transactional processing.
  
@@ -531,7 +687,7 @@ This is one of the reasons why utility companies today aren't capable to
  take full advantage of the data flood arising from a future nationwide
  smart metering infrastructure.
  For instance, the growing importance of renewable and distributed energy
- sources like wind and solar energy as part of the aimed at energy turnaround
+ sources like wind and solar energy as part of the aimed-at energy turnaround
  leads to an increased need of information.
  Despite their unpredictable nature, energy providers will have to provide
  available-to-promise functions.
@@ -591,14 +747,11 @@ key "Stonebraker:2005:CCD:1083592.1083658"
  capturing of the data amassing in a smart metering infrastructure and the
  real-time acquisition of information out of this data.
  In this thesis, it is shown how an in-memory database can be utilized to
- process and store the amount of meter readings which are assumed to arise
- after a Germany-wide implementation of smart metering and how the memory
- footprint of this data can be minimized with the help of lightweight column
- compression techniques with the help of SAPs In-Memory Computing Engine.
-\begin_inset Newpage newpage
-\end_inset
-
-
+ store the amount of meter readings which are assumed to arise after a Germany-w
+ide implementation of smart metering in real-time with the help of SAPs
+ In-Memory Computing Engine.
+ It is further shown how the memory footprint of this data can be minimized
+ through lightweight column compression techniques.
 \end_layout
 
 \begin_layout Section
@@ -631,7 +784,7 @@ name "sub:AMI"
 
 \end_inset
 
-Characteristics of an Advanced Metering Infrastructure
+AMI Characteristics
 \end_layout
 
 \begin_layout Standard
@@ -5249,7 +5402,7 @@ CPU
 \begin_layout Plain Layout
 
 \size scriptsize
-2x Intel Xeon X5670 @ 2.93GHz
+2x Intel Xeon X5670
 \end_layout
 
 \end_inset
@@ -5260,7 +5413,7 @@ CPU
 \begin_layout Plain Layout
 
 \size scriptsize
-4x Intel Xeon X7560 @ 2.27GHz
+4x Intel Xeon X7560
 \end_layout
 
 \end_inset
@@ -5604,6 +5757,22 @@ Network Connectivity
 
 \begin_layout Standard
 \begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+singlespacing
+\end_layout
+
 \end_inset
 
 
