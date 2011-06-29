@@ -500,7 +500,7 @@ fill}
 Im Zuge der Einführung von Smart Metering in Deutschland werden allein Privatkun
 den jährlich ca.
  1.4 Billionen Datensätze durch ihre Stromzähler erzeugen.
- Energieanbieter müssen in anderen Worten entsprechend dem Messintervall
+ Energieanbieter müssen mit anderen Worten entsprechend dem Messintervall
  moderner Zähler viertelstündlich 1.8GB an Rohdaten verarbeiten.
  Die Verarbeitung von kontinuierlichen Datenströmen dieser Größe stellt
  heutzutage eine große Herausforderung dar und herkömmliche OLAP Systeme
@@ -745,7 +745,14 @@ key "Stonebraker:2005:CCD:1083592.1083658"
  In this thesis, it is shown how an in-memory database can be utilized to
  store the amount of meter readings which are assumed to arise after a Germany-w
 ide implementation of smart metering in real-time with the help of SAPs
- In-Memory Computing Engine.
+ In-Memory Computing Engine 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bluebook"
+
+\end_inset
+
+.
  It is further shown how the memory footprint of this data can be minimized
  through lightweight column compression techniques.
 \end_layout
@@ -974,7 +981,7 @@ Thus, the primary target of the simulation is the generation of huge amounts
  In this way, the limits of an in-memory based central system can be investigate
 d.
  All other components of the metering infrastructure can be scaled easily,
- which is the reason why this paper focuses on the performance of the database
+ which is the reason why this thesis focuses on the performance of the database
  system itself.
 \end_layout
 
@@ -1668,7 +1675,7 @@ Unless stated otherwise, all measurements in this section have been made
  HPC and connecting to a NewDB instance on host HPA via JDBC.
  The hosts are connected via Gigabit LAN.
  The execution of INSERT-statements takes place on empty tables, whereas
- each table is generated before and droped after each test run.
+ each table is generated before and dropped after each test run.
  Autocommit is disabled as well as automerge and merge times are not included
  in the measurements.
  Transactional logging isn't in effect during inserts.
@@ -2397,7 +2404,7 @@ key "Welch:1984:THD:1319729.1320134"
  which give up compression and decompression speed to increase compression
  ratio typically result in performance losses.
  With insert performance beeing a crucial part of the depicted scenario,
- the focus of this paper is on lightweight column compression techniques.
+ the focus of this thesis is on lightweight column compression techniques.
  An overview over available techniques is given in the next section in order
  to make an evaluation in the context of energy event data possible.
 \end_layout
@@ -3637,7 +3644,7 @@ reference "eq:domain-coding"
 \end_inset
 
  for domain coded columns can be evaluated.
- The meter id column may server as an example.
+ The meter id column may serve as an example.
  According to formula 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -5331,11 +5338,27 @@ key "romano"
 
 \end_layout
 
-\begin_layout Section*
+\begin_layout Chapter*
 Appendix
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{section}{Appendix}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
 Benchmark Environment
 \end_layout
 
@@ -5747,6 +5770,22 @@ Network Connectivity
 </cell>
 </row>
 </lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FloatList table
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FloatList figure
 
 \end_inset
 
